@@ -1,7 +1,7 @@
 # encontrar_problema.py
 import os
-import sqlite3
-conn = sqlite3.connect('pagina1/database.db')
+import mysql.connector
+from backend.DB.db_manager import DatabaseConfig
 
 def encontrar_origen_datos():
     print("=== DIAGNÓSTICO COMPLETO ===\n")
