@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras - {{ data.company_name }}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}">
+    
+    <!-- Ion Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap">
+    
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=MXN"></script>
+    
+    <!-- Estilos base comunes -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fijos/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fijos/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/carro/carro.css') }}">
+    
+    <!-- Scripts comunes -->
+    <script src="{{ url_for('static', filename='js/fijos/header.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/fijos/footer.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/carro/carro.js') }}" defer></script>
+</head>
+<body>
+    
+    <!-- Incluir el header -->
+    {% include 'fijos/header.html' %}
+
+    <!-- Contenedor de notificaciones -->
+    <div class="notification-container"></div>
+    
+    <!-- Indicador de carga principal -->
+    <div class="page-loader">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+    </div>
+    
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <!-- Encabezado de la página -->
+        <section class="carro-header section-container">
+            <div class="section-header animate-item">
+                <h1>Tu Carrito de Compras</h1>
+                <p>Revisa tus productos seleccionados y completa tu compra</p>
+            </div>
+            
+            <!-- Indicador de estado del proceso -->
+            <div class="carro-process-steps animate-item">
+                <div class="step active">
+                    <div class="step-number">1</div>
+                    <div class="step-name">Carrito</div>
+                </div>
+                <div class="step-divider"></div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-name">Envío</div>
+                </div>
+                <div class="step-divider"></div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-name">Pago</div>
+                </div>
+                <div class="step-divider"></div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-name">Confirmación</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contenedor principal del carrito -->
+        <section class="carro-container section-container">
+            <div class="carro-content animate-item">
+                <!-- Vista cuando el carrito está vacío -->
+                <div id="carro-vacio" class="carro-vacio hidden">
+                    <div class="empty-cart-icon">
+                        <ion-icon name="cart-outline"></ion-icon>
+                    </div>
+                    <h2>Tu carrito está vacío</h2>
+                    <p>Parece que aún no has añadido productos a tu carrito.</p>
+                    <a href="/servicios" class="btn-primary btn-large">
+                        <ion-icon name="bag-handle-outline"></ion-icon>
+                        Explorar Productos
+                    </a>
+                </div>
+                
+                <!-- Vista cuando el carrito tiene productos -->
+                <div id="carro-con-productos" class="carro-con-productos">
+                    <!-- Tabla de productos -->
+                    <div class="carro-tabla">
+                        <!-- Encabezados de tabla -->
+                        <div class="carro-tabla-header">
+                            <div class="tabla-col producto-info">Producto</div>
+                            <div class="tabla-col producto-precio">Precio</div>
+                            <div class="tabla-col producto-cantidad">Cantidad</div>
+                            <div class="tabla-col producto-total">Total</div>
+                            <div class="tabla-col producto-acciones">Acciones</div>
+                        </div>
+                        
+                        <!-- Cuerpo de la tabla (productos) -->
+                        <div id="carro-items" class="carro-tabla-body">
+                            <!-- Plantilla para elemento del carrito 
+                                 Los elementos se generarán dinámicamente con JavaScript -->
+                            <template id="carro-item-template">
+                                <div class="carro-item" data-id="">
+                                    <div class="tabla-col producto-info">
+                                        <div class="producto-imagen skeleton-loading">
+                                            <img src="" alt="" class="lazy-image">
+                                        </div>
+                                        <div class="producto-detalles">
+                                            <h3 class="producto-nombre"></h3>
+                                            <p class="producto-categoria"></p>
+                                        </div>
+                                    </div>
+                                    <div class="tabla-col producto-precio">
+                                        <span class="precio"></span>
+                                    </div>
+                                    <div class="tabla-col producto-cantidad">
+                                        <div class="cantidad-control">
+                                            <button class="cantidad-btn dec-cantidad">
+                                                <ion-icon name="remove-outline"></ion-icon>
+                                            </button>
+                                            <input type="number" class="cantidad-input" value="1" min="1" max="99">
+                                            <button class="cantidad-btn inc-cantidad">
+                                                <ion-icon name="add-outline"></ion-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="tabla-col producto-total">
+                                        <span class="total"></span>
+                                    </div>
+                                    <div class="tabla-col producto-acciones">
+                                        <button class="btn-icon eliminar-item">
+                                            <ion-icon name="trash-outline"></ion-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+                            
+                            <!-- Aquí se insertarán los items dinámicamente -->
+                        </div>
+                    </div>
+                    
+                    <!-- Botones de acción sobre el carrito -->
+                    <div class="carro-acciones">
+                        <div class="carro-acciones-izquierda">
+                            <button id="vaciar-carro" class="btn-secondary">
+                                <ion-icon name="trash-outline"></ion-icon>
+                                Vaciar Carrito
+                            </button>
+                            <a href="/servicios" class="btn-secondary">
+                                <ion-icon name="arrow-back-outline"></ion-icon>
+                                Seguir Comprando
+                            </a>
+                        </div>
+                        <div class="carro-acciones-derecha">
+                            <button id="actualizar-carro" class="btn-secondary">
+                                <ion-icon name="refresh-outline"></ion-icon>
+                                Actualizar Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resumen del pedido y proceso de pago -->
+            <div class="carro-sidebar animate-item">
+                <div class="carro-resumen">
+                    <h2>Resumen del Pedido</h2>
+                    
+                    <!-- Detalles del resumen -->
+                    <div class="resumen-detalles">
+                        <div class="resumen-fila">
+                            <span>Subtotal</span>
+                            <span id="subtotal-precio">$0.00</span>
+                        </div>
+                        <div class="resumen-fila">
+                            <span>Envío</span>
+                            <span id="envio-precio">Por calcular</span>
+                        </div>
+                        <div class="resumen-fila">
+                            <span>Impuestos (16%)</span>
+                            <span id="impuestos-precio">$0.00</span>
+                        </div>
+                        <div class="resumen-fila total">
+                            <span>Total</span>
+                            <span id="total-precio">$0.00</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Cupón de descuento -->
+                    <div class="cupon-container">
+                        <h3>¿Tienes un cupón?</h3>
+                        <div class="cupon-input">
+                            <input type="text" id="cupon-codigo" placeholder="Ingresa tu código">
+                            <button id="aplicar-cupon" class="btn-secondary">
+                                <ion-icon name="checkmark-outline"></ion-icon>
+                                Aplicar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Botón de pago -->
+                    <div class="opciones-pago">
+                        <button id="proceder-pago" class="btn-primary btn-large">
+                            <ion-icon name="card-outline"></ion-icon>
+                            Proceder al Pago
+                        </button>
+                        
+                        <!-- Contenedor de PayPal -->
+                        <div id="paypal-button-container" class="hidden"></div>
+                    </div>
+                </div>
+                
+                <!-- Información adicional -->
+                <div class="carro-info">
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <ion-icon name="shield-checkmark-outline"></ion-icon>
+                        </div>
+                        <div class="info-content">
+                            <h3>Pago Seguro</h3>
+                            <p>Tus datos están protegidos con encriptación SSL</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <ion-icon name="car-outline"></ion-icon>
+                        </div>
+                        <div class="info-content">
+                            <h3>Envío en 3-5 días</h3>
+                            <p>A todo México a través de paquetería</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <ion-icon name="reload-outline"></ion-icon>
+                        </div>
+                        <div class="info-content">
+                            <h3>Devolución sin complicaciones</h3>
+                            <p>30 días para cambios o devoluciones</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Productos relacionados o sugeridos -->
+        <section class="productos-relacionados section-container">
+            <div class="section-header animate-item">
+                <h2>También te puede interesar</h2>
+                <p>Productos que complementan tu selección</p>
+            </div>
+            
+            <!-- Controles de navegación -->
+            <div class="slider-controls relacionados-controls">
+                <button class="slider-arrow prev-arrow" aria-label="Productos anteriores">
+                    <ion-icon name="chevron-back-outline"></ion-icon>
+                </button>
+                <div class="slider-pagination relacionados-pagination"></div>
+                <button class="slider-arrow next-arrow" aria-label="Productos siguientes">
+                    <ion-icon name="chevron-forward-outline"></ion-icon>
+                </button>
+            </div>
+            
+            <div class="productos-slider animate-item">
+                <div class="productos-track" id="productos-relacionados-track">
+                    {% for producto in data.productos_relacionados %}
+                    <div class="product-slide">
+                        <div class="product-card">
+                            {% if producto.destacado %}
+                            <div class="product-badge">Destacado</div>
+                            {% endif %}
+                            {% if producto.nuevo %}
+                            <div class="product-badge new-badge">Nuevo</div>
+                            {% endif %}
+                            <div class="product-image skeleton-loading">
+                                {% if producto.imagen_principal %}
+                                <img data-src="{{ producto.imagen_principal }}" alt="{{ producto.nombre }}" class="lazy-image">
+                                {% else %}
+                                <img data-src="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}" alt="{{ producto.nombre }}" class="lazy-image">
+                                {% endif %}
+                            </div>
+                            <div class="product-content">
+                                <h3>{{ producto.nombre }}</h3>
+                                <p class="product-category">{{ producto.categoria_nombre }}</p>
+                                <div class="product-price">
+                                    {% if producto.precio_descuento %}
+                                    <span class="price-discount">${{ producto.precio_descuento }}</span>
+                                    <span class="price-original">${{ producto.precio }}</span>
+                                    <span class="discount-badge">{{ producto.porcentaje_descuento }}% OFF</span>
+                                    {% else %}
+                                    <span class="price-normal">${{ producto.precio }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="product-actions">
+                                    <a href="{{ url_for('detalle_servicio', servicio_id=producto.id) }}" class="btn-secondary btn-view">
+                                        <ion-icon name="eye-outline"></ion-icon>
+                                        Ver Detalles
+                                    </a>
+                                    <button class="btn-primary btn-add-cart" data-product-id="{{ producto.id }}">
+                                        <ion-icon name="cart-outline"></ion-icon>
+                                        Añadir
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        
+        <!-- Botón de regreso arriba -->
+        <button id="back-to-top" class="back-to-top" aria-label="Volver arriba">
+            <ion-icon name="arrow-up-outline"></ion-icon>
+        </button>
+    </main>
+    
+    <!-- Modal de confirmación para eliminar producto -->
+    <div class="modal-overlay" id="eliminar-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Eliminar Producto</h3>
+                <button class="modal-close">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar este producto de tu carrito?</p>
+                <div class="producto-preview" id="eliminar-producto-preview">
+                    <div class="producto-preview-imagen skeleton-loading">
+                        <img src="" alt="" id="eliminar-producto-imagen" class="lazy-image">
+                    </div>
+                    <div class="producto-preview-detalles">
+                        <h4 id="eliminar-producto-nombre"></h4>
+                        <p id="eliminar-producto-precio"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelar-eliminar">
+                    <ion-icon name="close-outline"></ion-icon>
+                    Cancelar
+                </button>
+                <button class="btn-primary" id="confirmar-eliminar" data-product-id="">
+                    <ion-icon name="trash-outline"></ion-icon>
+                    Sí, Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de dirección de envío -->
+    <div class="modal-overlay" id="envio-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Información de Envío</h3>
+                <button class="modal-close">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% if user is defined and user %}
+                <!-- Usuario está autenticado, mostrar direcciones guardadas -->
+                <div class="direcciones-guardadas" id="direcciones-guardadas">
+                    <h4>Selecciona una dirección guardada</h4>
+                    
+                    <div class="direcciones-lista">
+                        {% for direccion in data.direcciones %}
+                        <div class="direccion-item" data-direccion-id="{{ direccion.id }}">
+                            <div class="direccion-radio">
+                                <input type="radio" name="direccion_seleccionada" 
+                                       id="direccion-{{ direccion.id }}" 
+                                       value="{{ direccion.id }}"
+                                       {% if direccion.es_principal %}checked{% endif %}>
+                                <label for="direccion-{{ direccion.id }}"></label>
+                            </div>
+                            <div class="direccion-detalles">
+                                <p><strong>{{ direccion.direccion_linea1 }}</strong></p>
+                                <p>{{ direccion.direccion_linea2 }}</p>
+                                <p>{{ direccion.ciudad }}, {{ direccion.estado }}, {{ direccion.codigo_postal }}</p>
+                                <p>{{ direccion.pais }}</p>
+                            </div>
+                            {% if direccion.es_principal %}
+                            <div class="direccion-badge">Principal</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <button class="btn-secondary btn-small" id="mostrar-nueva-direccion">
+                        <ion-icon name="add-outline"></ion-icon>
+                        Nueva Dirección
+                    </button>
+                </div>
+                {% endif %}
+                
+                <!-- Formulario para nueva dirección -->
+                <div class="nueva-direccion" id="nueva-direccion" {% if user is defined and user %}style="display: none;"{% endif %}>
+                    <h4>{% if user is defined and user %}Añadir Nueva Dirección{% else %}Información de Envío{% endif %}</h4>
+                    
+                    <form id="direccion-form" class="direccion-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nombre">Nombre*</label>
+                                <input type="text" id="nombre" name="nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="apellidos">Apellidos*</label>
+                                <input type="text" id="apellidos" name="apellidos" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="direccion_linea1">Dirección Línea 1*</label>
+                            <input type="text" id="direccion_linea1" name="direccion_linea1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="direccion_linea2">Dirección Línea 2 (opcional)</label>
+                            <input type="text" id="direccion_linea2" name="direccion_linea2">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ciudad">Ciudad*</label>
+                                <input type="text" id="ciudad" name="ciudad" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="estado">Estado*</label>
+                                <input type="text" id="estado" name="estado" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="codigo_postal">Código Postal*</label>
+                                <input type="text" id="codigo_postal" name="codigo_postal" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pais">País*</label>
+                                <select id="pais" name="pais" required>
+                                    <option value="México" selected>México</option>
+                                    <option value="Estados Unidos">Estados Unidos</option>
+                                    <option value="Canadá">Canadá</option>
+                                    <!-- Otros países pueden ser añadidos -->
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="telefono">Teléfono de contacto*</label>
+                            <input type="tel" id="telefono" name="telefono" required>
+                        </div>
+                        
+                        <!-- Solo mostrar si el usuario está autenticado -->
+                        {% if user is defined and user %}
+                        <div class="form-checkbox">
+                            <input type="checkbox" id="guardar_direccion" name="guardar_direccion" checked>
+                            <label for="guardar_direccion">Guardar dirección para futuros pedidos</label>
+                        </div>
+                        
+                        <div class="form-checkbox">
+                            <input type="checkbox" id="direccion_principal" name="direccion_principal">
+                            <label for="direccion_principal">Establecer como dirección principal</label>
+                        </div>
+                        {% endif %}
+                    </form>
+                    
+                    {% if user is defined and user %}
+                    <button class="btn-secondary btn-small" id="volver-direcciones-guardadas">
+                        <ion-icon name="arrow-back-outline"></ion-icon>
+                        Volver a direcciones guardadas
+                    </button>
+                    {% endif %}
+                </div>
+                
+                <!-- Opciones de envío con precios dinámicos -->
+                <div class="opciones-envio">
+                    <h4>Método de Envío</h4>
+                    
+                    <div class="info-envio-dinamico">
+                        <p><ion-icon name="information-circle-outline"></ion-icon> El costo de envío se calcula según el subtotal de tu compra.</p>
+                    </div>
+                    <div class="envio-opciones">
+                        <div class="envio-opcion">
+                            <input type="radio" name="metodo_envio" id="envio-estandar" value="estandar" checked>
+                            <label for="envio-estandar">
+                                <div class="envio-nombre">Envío Estándar</div>
+                                <div class="envio-detalles">
+                                    <p>Entrega en 3-5 días hábiles</p>
+                                    <div class="envio-precios">
+                                        <p class="envio-precio-total">Total: <span id="total-estandar">Por calcular</span></p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="envio-opcion">
+                            <input type="radio" name="metodo_envio" id="envio-express" value="express">
+                            <label for="envio-express">
+                                <div class="envio-nombre">Envío Express</div>
+                                <div class="envio-detalles">
+                                    <p>Entrega en 1-2 días hábiles</p>
+                                    <div class="envio-precios">
+                                        <p class="envio-precio-total">Total: <span id="total-express">Por calcular</span></p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelar-envio">
+                    <ion-icon name="close-outline"></ion-icon>
+                    Cancelar
+                </button>
+                <button class="btn-primary" id="confirmar-envio">
+                    <ion-icon name="checkmark-outline"></ion-icon>
+                    Continuar al Pago
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de confirmación de pedido -->
+    <div class="modal-overlay" id="confirmacion-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>¡Pedido Confirmado!</h3>
+                <button class="modal-close">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="confirmacion-icon">
+                    <ion-icon name="checkmark-circle-outline"></ion-icon>
+                </div>
+                
+                <h2>¡Gracias por tu compra!</h2>
+                <p>Tu pedido ha sido registrado correctamente.</p>
+                
+                <div class="confirmacion-detalles">
+                    <div class="confirmacion-item">
+                        <span class="confirmacion-label">Número de pedido:</span>
+                        <span class="confirmacion-value" id="confirmacion-pedido-id">ABC12345</span>
+                    </div>
+                    <div class="confirmacion-item">
+                        <span class="confirmacion-label">Fecha:</span>
+                        <span class="confirmacion-value" id="confirmacion-fecha">01/03/2023</span>
+                    </div>
+                    <div class="confirmacion-item">
+                        <span class="confirmacion-label">Total:</span>
+                        <span class="confirmacion-value" id="confirmacion-total">$1,250.00</span>
+                    </div>
+                    <div class="confirmacion-item">
+                        <span class="confirmacion-label">Método de pago:</span>
+                        <span class="confirmacion-value" id="confirmacion-metodo-pago">PayPal</span>
+                    </div>
+                </div>
+                
+                <p class="confirmacion-mensaje">
+                    Hemos enviado un correo electrónico con los detalles de tu compra.
+                    Te notificaremos cuando tu pedido sea enviado.
+                </p>
+            </div>
+            <div class="modal-footer">
+                {% if user is defined and user %}
+                <a href="#mis-pedidos" class="btn-secondary">
+                    <ion-icon name="list-outline"></ion-icon>
+                    Ver Mis Pedidos
+                </a>
+                {% endif %}
+                <a href="/servicios" class="btn-primary btn-large">
+                    <ion-icon name="bag-handle-outline"></ion-icon>
+                    Explorar Productos
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Incluir el footer -->
+    {% include 'fijos/footer.html' %}
+</body>
+</html>

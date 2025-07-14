@@ -1,0 +1,831 @@
+/* Variables para colores y tamaños con paleta administrativa */
+:root {
+    --admin-primary: #2C3E50; /* Color base administrativo */
+    --admin-primary-dark: #1a252f;
+    --admin-primary-light: #34495E;
+    --admin-primary-lighter: #41596e;
+    --admin-primary-lightest: #56738a;
+    --admin-accent: #E67E22; /* Color naranja para acentos */
+    --admin-accent-hover: #F39C12;
+    --admin-success: #27AE60; /* Verde para acciones positivas */
+    --admin-danger: #E74C3C; /* Rojo para acciones peligrosas */
+    --admin-warning: #F1C40F; /* Amarillo para advertencias */
+    --admin-info: #3498DB; /* Azul para información */
+    --text-color: #ffffff;
+    --text-dark: #333333;
+    --text-light: #f8f8f8;
+    --hover-color: #3c526a;
+    --active-color: #45617d;
+    --shadow-color: rgba(0, 0, 0, 0.15);
+    --shadow-color-strong: rgba(0, 0, 0, 0.25);
+    --header-height: 4.5rem; /* Ligeramente más bajo que el frontend */
+    --transition-speed: 0.3s;
+    --border-radius: 0.5rem;
+    --border-radius-sm: 0.25rem;
+}
+
+/* Estilos para reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px; /* Base para medidas rem */
+    height: 100%;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    background-color: #f5f7fa;
+    color: var(--text-dark);
+    overflow-x: hidden;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 100%;
+    max-width: 87.5rem; /* 1400px - Más ancho para admin */
+    margin: 0 auto;
+    padding: 0 1.25rem; /* 20px */
+    height: 100%;
+}
+
+/* Estilos del header admin */
+.admin-header {
+    background: linear-gradient(135deg, var(--admin-primary-dark), var(--admin-primary) 60%, var(--admin-primary-light));
+    color: var(--text-color);
+    height: var(--header-height);
+    box-shadow: 0 0.25rem 0.9375rem var(--shadow-color);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: all var(--transition-speed) ease;
+}
+
+/* Efecto de scroll */
+.admin-header.scrolled {
+    height: calc(var(--header-height) - 0.5rem);
+    box-shadow: 0 0.1875rem 1.25rem var(--shadow-color-strong);
+    background: linear-gradient(135deg, var(--admin-primary-dark), var(--admin-primary) 80%);
+}
+
+.admin-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 0.625rem; /* 10px */
+}
+
+/* Estilos del logo admin */
+.admin-logo {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.admin-logo-img-container {
+    height: 2.8125rem; /* 45px */
+    width: 2.8125rem; /* 45px */
+    overflow: hidden;
+    margin-right: 0.75rem; /* 12px */
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
+    transition: all var(--transition-speed) ease;
+}
+
+.admin-logo img {
+    height: 2.25rem; /* 36px */
+    transition: transform var(--transition-speed) ease;
+}
+
+.admin-logo:hover .admin-logo-img-container {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.admin-logo:hover img {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.admin-logo-text h1 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-shadow: 0 0.0625rem 0.1875rem rgba(0,0,0,0.3);
+    letter-spacing: 0.03125rem; /* 0.5px */
+    position: relative;
+    transition: all var(--transition-speed) ease;
+}
+
+.admin-logo-text span {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 0.0625rem; /* 1px */
+}
+
+.admin-logo:hover .admin-logo-text h1 {
+    transform: translateY(-0.125rem); /* -2px */
+    text-shadow: 0 0.125rem 0.3125rem rgba(0,0,0,0.4);
+}
+
+/* Estilos de navegación admin */
+.admin-nav {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.admin-nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    align-items: center;
+}
+
+.admin-nav li {
+    margin: 0 0.3125rem; /* 5px */
+    display: flex;
+    align-items: center;
+    height: 100%;
+    position: relative;
+}
+
+.admin-nav-link {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    padding: 0 0.9375rem; /* 15px */
+    height: 70%;
+    position: relative;
+    transition: all var(--transition-speed) ease;
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+}
+
+.admin-nav-link:before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0.1875rem; /* 3px */
+    background: var(--admin-accent);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s ease;
+}
+
+.admin-nav-link:hover:before,
+.admin-nav-link.active:before {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.admin-nav-link:hover {
+    color: var(--text-light);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-nav-link.active {
+    color: var(--admin-accent);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.admin-nav-link ion-icon {
+    margin-right: 0.5rem; /* 8px */
+    font-size: 1.3rem;
+    transition: all var(--transition-speed) ease;
+}
+
+.admin-nav-link:hover ion-icon {
+    transform: translateY(-0.1875rem); /* -3px */
+}
+
+/* Estilos para dropdown de navegación */
+.admin-nav-dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    padding-right: 1.5rem;
+}
+
+.dropdown-toggle:after {
+    content: '';
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 0.3rem solid transparent;
+    border-right: 0.3rem solid transparent;
+    border-top: 0.3rem solid var(--text-color);
+    transition: transform var(--transition-speed) ease;
+}
+
+.admin-nav-dropdown:hover .dropdown-toggle:after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    box-shadow: 0 0.3125rem 0.9375rem rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius);
+    min-width: 12rem;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(0.625rem);
+    transition: all var(--transition-speed) ease;
+    z-index: 1001;
+}
+
+.admin-nav-dropdown:hover .dropdown-menu {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    display: block;
+    color: var(--text-dark);
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    transition: all var(--transition-speed) ease;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(44, 62, 80, 0.05);
+    color: var(--admin-primary);
+}
+
+.dropdown-item ion-icon {
+    margin-right: 0.5rem;
+    font-size: 1.1rem;
+    vertical-align: middle;
+}
+
+/* Acciones de admin */
+.admin-actions {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.admin-action {
+    color: var(--text-color);
+    text-decoration: none;
+    margin-left: 0.75rem; /* 12px */
+    padding: 0.5rem 0.9375rem; /* 8px 15px */
+    border-radius: 3.125rem; /* 50px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.5rem; /* 8px */
+    position: relative;
+    z-index: 1;
+}
+
+.admin-action ion-icon {
+    font-size: 1.3rem;
+    transition: all 0.4s ease;
+}
+
+.admin-action:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0);
+    transition: all 0.3s ease;
+    z-index: 0;
+    border-radius: 3.125rem; /* 50px */
+}
+
+.admin-action:hover:before {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Estilos específicos para tipos de acciones */
+.admin-logout-link:hover {
+    color: var(--admin-danger);
+}
+
+.admin-logout-link:hover ion-icon {
+    animation: pulse 1s ease infinite alternate;
+}
+
+.admin-profile-link {
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-profile-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Notificaciones admin */
+.admin-notification-badge {
+    background-color: var(--admin-danger);
+    color: white;
+    font-size: 0.6875rem; /* 11px */
+    font-weight: 600;
+    height: 1.125rem; /* 18px */
+    min-width: 1.125rem; /* 18px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2);
+    transition: all var(--transition-speed) ease;
+    padding: 0 0.125rem; /* 2px */
+}
+
+.admin-action:hover .admin-notification-badge {
+    transform: scale(1.2);
+}
+
+/* Animaciones */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.2); }
+}
+
+/* Admin welcome styling */
+.admin-welcome {
+    display: flex;
+    align-items: center;
+    padding: 0.3125rem 0.75rem; /* 5px 12px */
+    border-radius: 3.125rem; /* 50px */
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.5rem; /* 8px */
+}
+
+.admin-avatar ion-icon {
+    font-size: 1.5rem;
+    color: var(--admin-accent);
+}
+
+/* Hamburger menu para admin */
+.admin-mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 0.5rem; /* 8px */
+    z-index: 1001;
+    border-radius: var(--border-radius-sm);
+    transition: all var(--transition-speed) ease;
+}
+
+.admin-hamburger {
+    width: 1.5rem; /* 24px */
+    height: 1.25rem; /* 20px */
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0;
+}
+
+.admin-hamburger span {
+    display: block;
+    position: absolute;
+    height: 0.1875rem; /* 3px */
+    width: 100%;
+    background: var(--text-color);
+    border-radius: 0.1875rem; /* 3px */
+    opacity: 1;
+    left: 0;
+    transform: rotate(0deg);
+    transition: .25s ease-in-out;
+}
+
+.admin-hamburger span:nth-child(1) {
+    top: 0px;
+}
+
+.admin-hamburger span:nth-child(2) {
+    top: 0.5rem; /* 8px */
+}
+
+.admin-hamburger span:nth-child(3) {
+    top: 1rem; /* 16px */
+}
+
+.admin-mobile-menu-toggle.active .admin-hamburger span:nth-child(1) {
+    top: 0.5rem; /* 8px */
+    transform: rotate(135deg);
+}
+
+.admin-mobile-menu-toggle.active .admin-hamburger span:nth-child(2) {
+    opacity: 0;
+    left: -3.75rem; /* -60px */
+}
+
+.admin-mobile-menu-toggle.active .admin-hamburger span:nth-child(3) {
+    top: 0.5rem; /* 8px */
+    transform: rotate(-135deg);
+}
+
+/* Menú lateral de administración */
+.admin-sidenav {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    width: 16rem;
+    height: calc(100vh - var(--header-height));
+    background-color: var(--admin-primary-dark);
+    z-index: 999;
+    overflow-y: auto;
+    transition: all var(--transition-speed) ease;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.sidenav-menu {
+    padding: 1rem 0;
+}
+
+.sidenav-menu-header {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    padding: 1rem 1.5rem 0.5rem;
+    font-weight: 600;
+}
+
+.sidenav-item {
+    display: block;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    transition: all var(--transition-speed) ease;
+    border-left: 3px solid transparent;
+}
+
+.sidenav-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+    border-left-color: var(--admin-accent);
+}
+
+.sidenav-item.active {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: white;
+    border-left-color: var(--admin-accent);
+}
+
+.sidenav-item ion-icon {
+    margin-right: 0.75rem;
+    font-size: 1.2rem;
+}
+
+/* Contenido principal cuando hay barra lateral */
+.admin-main-content {
+    margin-left: 16rem;
+    padding: 1.5rem;
+    transition: margin-left var(--transition-speed) ease;
+}
+
+/* Ocultar sidenav en vista compacta */
+.compact-view .admin-sidenav {
+    width: 4.5rem;
+}
+
+.compact-view .sidenav-menu-header {
+    text-align: center;
+    padding: 1rem 0.5rem 0.5rem;
+}
+
+.compact-view .sidenav-item {
+    padding: 0.75rem;
+    justify-content: center;
+    text-align: center;
+}
+
+.compact-view .sidenav-item ion-icon {
+    margin-right: 0;
+    font-size: 1.4rem;
+}
+
+.compact-view .admin-main-content {
+    margin-left: 4.5rem;
+}
+
+.compact-view .sidenav-item span {
+    display: none;
+}
+
+/* Toggle para vista compacta */
+.toggle-sidenav {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    position: absolute;
+    top: 1rem;
+    right: -0.75rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background-color: var(--admin-primary);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1002;
+    transition: all var(--transition-speed) ease;
+}
+
+.toggle-sidenav:hover {
+    background-color: var(--admin-accent);
+}
+
+.toggle-sidenav ion-icon {
+    font-size: 1rem;
+    transition: transform var(--transition-speed) ease;
+}
+
+.compact-view .toggle-sidenav ion-icon {
+    transform: rotate(180deg);
+}
+
+/* Media queries para responsive */
+@media (max-width: 992px) {
+    .admin-header-content {
+        justify-content: space-between;
+    }
+    
+    .admin-nav {
+        justify-content: center;
+    }
+    
+    .admin-nav li {
+        margin: 0 0.1875rem; /* 3px */
+    }
+    
+    .admin-nav-link {
+        padding: 0 0.625rem; /* 10px */
+    }
+    
+    .admin-action {
+        padding: 0.375rem 0.75rem; /* 6px 12px */
+        margin-left: 0.5rem; /* 8px */
+    }
+    
+    .admin-sidenav {
+        width: 14rem;
+    }
+    
+    .admin-main-content {
+        margin-left: 14rem;
+    }
+    
+    .compact-view .admin-sidenav {
+        width: 4rem;
+    }
+    
+    .compact-view .admin-main-content {
+        margin-left: 4rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-header {
+        height: var(--header-height);
+    }
+    
+    .admin-sidenav {
+        transform: translateX(-100%);
+        box-shadow: none;
+    }
+    
+    .admin-sidenav.active {
+        transform: translateX(0);
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .admin-main-content {
+        margin-left: 0;
+    }
+    
+    .admin-header-content {
+        position: relative;
+        padding: 0.625rem; /* 10px */
+    }
+    
+    .admin-logo {
+        flex-grow: 1;
+    }
+    
+    .admin-logo-img-container {
+        height: 2.5rem; /* 40px */
+        width: 2.5rem; /* 40px */
+    }
+    
+    .admin-logo img {
+        height: 1.875rem; /* 30px */
+    }
+    
+    .admin-mobile-menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        order: 3;
+        padding: 0.5rem; /* 8px */
+        margin-left: 0.625rem; /* 10px */
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .admin-mobile-menu-toggle:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .admin-nav {
+        position: fixed;
+        top: var(--header-height);
+        left: -100%;
+        width: 100%;
+        height: auto;
+        background: var(--admin-primary);
+        overflow-y: auto;
+        transition: left 0.3s ease;
+        opacity: 1;
+        z-index: 1000;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding: 0;
+        box-shadow: 0 0.3125rem 0.9375rem rgba(0, 0, 0, -0.2);
+    }
+    
+    .admin-nav.active {
+        left: 0;
+    }
+    
+    .admin-menu-overlay {
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        width: 100%;
+        height: calc(100vh - var(--header-height));
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    
+    .admin-menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .admin-nav ul {
+        flex-direction: column;
+        width: 100%;
+        padding: 0;
+        height: auto;
+    }
+    
+    .admin-nav li {
+        width: 100%;
+        margin: 0;
+        height: auto;
+    }
+    
+    .admin-nav-link {
+        padding: 0.9375rem 1.25rem; /* 15px 20px */
+        width: 100%;
+        height: auto;
+        border-radius: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .admin-nav-link:before {
+        display: none;
+    }
+    
+    /* Manejo de dropdowns en móvil */
+    .dropdown-menu {
+        position: static;
+        visibility: visible;
+        opacity: 1;
+        transform: none;
+        box-shadow: none;
+        display: none;
+        min-width: 100%;
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 0;
+    }
+    
+    .admin-nav-dropdown.active .dropdown-menu {
+        display: block;
+    }
+    
+    .dropdown-toggle:after {
+        right: 1.25rem;
+    }
+    
+    .dropdown-item {
+        padding: 0.75rem 1.75rem;
+        color: var(--text-color);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .dropdown-item:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: var(--admin-accent);
+    }
+    
+    .admin-actions {
+        margin-left: auto;
+        order: 2;
+    }
+    
+    .action-text {
+        display: none;
+    }
+    
+    .admin-action {
+        padding: 0.5rem; /* 8px */
+        margin-left: 0.3125rem; /* 5px */
+    }
+    
+    .admin-action-icon {
+        margin-right: 0;
+    }
+    
+    .admin-welcome {
+        padding: 0.3125rem 0.5rem; /* 5px 8px */
+        background: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .admin-logo-text span {
+        display: none;
+    }
+    
+    .admin-welcome {
+        display: none;
+    }
+    
+    .admin-actions {
+        margin-left: 0.3125rem; /* 5px */
+    }
+    
+    .admin-action {
+        padding: 0.375rem; /* 6px */
+        margin-left: 0.1875rem; /* 3px */
+    }
+}

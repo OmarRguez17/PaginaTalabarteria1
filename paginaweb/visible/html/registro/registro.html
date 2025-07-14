@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data.app_name }} - Registro de Usuario</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}">
+    
+    <!-- Ion Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap">
+    
+    <!-- Estilos base comunes -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fijos/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fijos/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registro/registro.css') }}">
+    
+    <!-- Scripts comunes -->
+    <script src="{{ url_for('static', filename='js/fijos/header.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/fijos/footer.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/registro/registro.js') }}" defer></script>
+</head>
+<body>
+    
+    <!-- Incluir el header -->
+    {% include 'fijos/header.html' %}
+
+    <!-- Contenedor de notificaciones -->
+    <div class="notification-container"></div>
+    
+    <!-- Indicador de carga principal -->
+    <div class="page-loader">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+    </div>
+    
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <div class="registro-container">
+            <div class="registro-steps-container">
+                <div class="registro-steps">
+                    <div class="registro-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Información Personal</h3>
+                            <p>Datos básicos de tu cuenta</p>
+                        </div>
+                    </div>
+                    <div class="registro-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Verificación</h3>
+                            <p>Código de verificación</p>
+                        </div>
+                    </div>
+                    <div class="registro-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Completado</h3>
+                            <p>Registro exitoso</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="registro-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 33%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="registro-content">
+                <!-- Paso 1: Información Personal -->
+                <div class="registro-form-container" id="step-1">
+                    <div class="registro-header">
+                        <div class="registro-logo">
+                            <img src="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}" alt="{{ data.app_name }}">
+                        </div>
+                        <h1>Crear una cuenta</h1>
+                        <p>Completa el formulario para unirte a Talabartería Rodríguez</p>
+                    </div>
+                    
+                    <!-- Alerta de mensajes (inicialmente oculta) -->
+                    <div class="registro-alert" style="display: none;">
+                        <ion-icon name="alert-circle-outline"></ion-icon>
+                        <span class="registro-alert-message"></span>
+                        <button class="registro-alert-close">
+                            <ion-icon name="close-outline"></ion-icon>
+                        </button>
+                    </div>
+                    
+                    <form id="registro-form" class="registro-form" method="post" action="{{ url_for('registro_create_temp_user') }}">
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="registro-nombre">Nombre*</label>
+                                <div class="input-icon-wrapper">
+                                    <ion-icon name="person-outline"></ion-icon>
+                                    <input type="text" id="registro-nombre" name="nombre" placeholder="Tu nombre" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-field">
+                                <label for="registro-apellidos">Apellidos*</label>
+                                <div class="input-icon-wrapper">
+                                    <ion-icon name="person-outline"></ion-icon>
+                                    <input type="text" id="registro-apellidos" name="apellidos" placeholder="Tus apellidos" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="registro-email">Correo electrónico*</label>
+                            <div class="input-icon-wrapper">
+                                <ion-icon name="mail-outline"></ion-icon>
+                                <input type="email" id="registro-email" name="email" placeholder="Tu correo electrónico" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="registro-telefono">Teléfono (opcional)</label>
+                            <div class="input-icon-wrapper">
+                                <ion-icon name="call-outline"></ion-icon>
+                                <input type="tel" id="registro-telefono" name="telefono" placeholder="Tu número de teléfono">
+                            </div>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="registro-password">Contraseña*</label>
+                            <div class="input-icon-wrapper">
+                                <ion-icon name="lock-closed-outline"></ion-icon>
+                                <input type="password" id="registro-password" name="password" placeholder="Crea una contraseña" required>
+                                <button type="button" class="password-toggle">
+                                    <ion-icon name="eye-outline" class="show-password"></ion-icon>
+                                    <ion-icon name="eye-off-outline" class="hide-password" style="display: none;"></ion-icon>
+                                </button>
+                            </div>
+                            <div class="password-requirements">
+                                <p>La contraseña debe tener:</p>
+                                <ul>
+                                    <li data-requirement="length">Al menos 8 caracteres</li>
+                                    <li data-requirement="uppercase">Al menos una mayúscula</li>
+                                    <li data-requirement="lowercase">Al menos una minúscula</li>
+                                    <li data-requirement="number">Al menos un número</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="registro-confirm-password">Confirmar contraseña*</label>
+                            <div class="input-icon-wrapper">
+                                <ion-icon name="lock-closed-outline"></ion-icon>
+                                <input type="password" id="registro-confirm-password" name="confirm_password" placeholder="Repite tu contraseña" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-options">
+                            <div class="terms-agree">
+                                <input type="checkbox" id="terms" name="terms" required>
+                                <label for="terms">Acepto los <a href="#" target="_blank">Términos y Condiciones</a> y la <a href="#" target="_blank">Política de Privacidad</a></label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary btn-next">
+                                <span>Continuar</span>
+                                <ion-icon name="arrow-forward-outline"></ion-icon>
+                            </button>
+                            <a href="{{ url_for('login') }}" class="btn-link">
+                                <ion-icon name="log-in-outline"></ion-icon>
+                                <span>Ya tengo una cuenta</span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Paso 2: Verificación por Correo -->
+                <div class="registro-form-container" id="step-2" style="display: none;">
+                    <div class="registro-header">
+                        <div class="registro-logo">
+                            <img src="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}" alt="{{ data.app_name }}">
+                        </div>
+                        <h1>Verificación por correo</h1>
+                        <p>Hemos enviado un código de 6 dígitos a <strong id="verification-email"></strong></p>
+                    </div>
+                    
+                    <!-- Alerta de mensajes (inicialmente oculta) -->
+                    <div class="registro-alert" style="display: none;">
+                        <ion-icon name="alert-circle-outline"></ion-icon>
+                        <span class="registro-alert-message"></span>
+                        <button class="registro-alert-close">
+                            <ion-icon name="close-outline"></ion-icon>
+                        </button>
+                    </div>
+                    
+                    <form id="verification-form" class="registro-form">
+                        <div class="verification-code-container">
+                            <div class="verification-code-inputs">
+                                <input type="text" maxlength="1" class="verification-input" pattern="[0-9]" inputmode="numeric" required>
+                                <input type="text" maxlength="1" class="verification-input" pattern="[0-9]" inputmode="numeric" required>
+                                <input type="text" maxlength="1" class="verification-input" pattern="[0-9]" inputmode="numeric" required>
+                                <input type="text" maxlength="1" class="verification-input" pattern="[0-9]" inputmode="numeric" required>
+                                <input type="text" maxlength="1" class="verification-input" pattern="[0-9]" inputmode="numeric" required>
+                                <input type="text" maxlength="1" class="verification-input" pattern="[0-9]" inputmode="numeric" required>
+                            </div>
+                            
+                            <div class="verification-info">
+                                <p>Ingresa el código de 6 dígitos enviado a tu correo electrónico</p>
+                            </div>
+                            
+                            <!-- Campo oculto para almacenar el código completo -->
+                            <input type="hidden" id="verification-code" name="verification_code">
+                            
+                            <!-- Campo oculto para almacenar el ID temporal del usuario -->
+                            <input type="hidden" id="temp-user-id" name="temp_user_id">
+                        </div>
+                        
+                        <div class="verification-timer">
+                            <p>Solicitar un nuevo código en <span id="timer">05:00</span></p>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary btn-verify">
+                                <span>Verificar</span>
+                                <ion-icon name="checkmark-outline"></ion-icon>
+                            </button>
+                            <button type="button" id="resend-code" class="btn-link" disabled>
+                                <ion-icon name="refresh-outline"></ion-icon>
+                                <span>Reenviar código</span>
+                            </button>
+                            <button type="button" id="back-to-step-1" class="btn-link">
+                                <ion-icon name="arrow-back-outline"></ion-icon>
+                                <span>Volver</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Paso 3: Registro Completado -->
+                <div class="registro-form-container" id="step-3" style="display: none;">
+                    <div class="registro-success">
+                        <div class="success-icon">
+                            <ion-icon name="checkmark-circle-outline"></ion-icon>
+                        </div>
+                        <h1>¡Registro Completado!</h1>
+                        <p>Tu cuenta ha sido creada y verificada exitosamente.</p>
+                        <div class="success-actions">
+                            <a href="{{ url_for('login') }}" class="btn-primary">
+                                <ion-icon name="log-in-outline"></ion-icon>
+                                <span>Iniciar Sesión</span>
+                            </a>
+                            <a href="{{ url_for('home') }}" class="btn-secondary">
+                                <ion-icon name="home-outline"></ion-icon>
+                                <span>Ir a Inicio</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Incluir el footer -->
+    {% include 'fijos/footer.html' %}
+    
+    <!-- Efecto de fondo -->
+    <div class="background-effect"></div>
+</body>
+</html>

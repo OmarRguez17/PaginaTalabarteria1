@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data.app_name }} - Gestión de Categorías</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}">
+    <!-- Ion Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap">
+    <!-- Estilos -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard/categorias.css') }}">
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/dashboard/categorias.js') }}" defer></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}" alt="Logo">
+            </div>
+            
+            <nav class="admin-nav">
+                <ul>
+                    <li>
+                        <a href="{{ url_for('dashboard') }}">
+                            <ion-icon name="grid-outline"></ion-icon>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('dashboard_productos') }}">
+                            <ion-icon name="bag-handle-outline"></ion-icon>
+                            <span>Productos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('dashboard_categorias') }}" class="active">
+                            <ion-icon name="folder-outline"></ion-icon>
+                            <span>Categorías</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/dashboard/configuracion">
+                            <ion-icon name="settings-outline"></ion-icon>
+                            <span>Configuración</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="admin-content">
+            <!-- HEADER -->
+            <header class="admin-header">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </button>
+                
+                <h1 class="admin-title">Gestión de Categorías</h1>
+                
+                <div class="admin-user">
+                    <div class="admin-user-avatar">
+                        <ion-icon name="person"></ion-icon>
+                    </div>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle" onclick="toggleDropdown(this)">
+                            <ion-icon name="ellipsis-vertical"></ion-icon>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="{{ url_for('dashboard') }}" class="dropdown-item">
+                                <ion-icon name="home-outline"></ion-icon>
+                                Dashboard Cliente
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <ion-icon name="person-outline"></ion-icon>
+                                Mi Perfil
+                            </a>
+                            <a href="{{ url_for('logout') }}" class="dropdown-item">
+                                <ion-icon name="log-out-outline"></ion-icon>
+                                Cerrar Sesión
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- ESTADÍSTICAS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <ion-icon name="folder-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">{{ data.total_categorias }}</div>
+                        <div class="stat-label">Total Categorías</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <ion-icon name="layers-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">
+                            {{ data.categorias_planas|selectattr('categoria_padre_id', 'none')|list|length }}
+                        </div>
+                        <div class="stat-label">Categorías Principales</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <ion-icon name="git-branch-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">
+                            {{ data.categorias_planas|rejectattr('categoria_padre_id', 'none')|list|length }}
+                        </div>
+                        <div class="stat-label">Subcategorías</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <ion-icon name="checkmark-circle-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">
+                            {{ data.categorias_planas|selectattr('activo')|list|length }}
+                        </div>
+                        <div class="stat-label">Categorías Activas</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ACCIONES -->
+            <div class="categories-actions">
+                <button class="btn-primary" onclick="openModal('addCategoryModal')">
+                    <ion-icon name="add-circle-outline"></ion-icon>
+                    <span class="btn-text">Nueva Categoría</span>
+                </button>
+                
+                <div class="search-box">
+                    <ion-icon name="search-outline"></ion-icon>
+                    <input type="text" id="searchInput" placeholder="Buscar categorías...">
+                </div>
+            </div>
+            
+            <!-- LISTADO DE CATEGORÍAS -->
+            <div class="categories-container">
+                {% for categoria in data.categorias %}
+                    <!-- Categoría item -->
+                    <div class="category-item" data-id="{{ categoria.id }}">
+                        <div class="category-header">
+                            <div class="category-info">
+                                {% if categoria.url_imagen %}
+                                <div class="category-image">
+                                    <img src="{{ categoria.url_imagen }}" alt="{{ categoria.nombre }}">
+                                </div>
+                                {% else %}
+                                <div class="category-icon">
+                                    <ion-icon name="folder-outline"></ion-icon>
+                                </div>
+                                {% endif %}
+                                
+                                <div class="category-details">
+                                    <h3 class="category-name">{{ categoria.nombre }}</h3>
+                                    <div class="category-meta">
+                                        <span class="product-count">
+                                            <ion-icon name="pricetag-outline"></ion-icon>
+                                            {{ categoria.total_productos }} productos
+                                        </span>
+                                        {% if categoria.categoria_padre_nombre %}
+                                        <span class="parent-category">
+                                            <ion-icon name="git-branch-outline"></ion-icon>
+                                            {{ categoria.categoria_padre_nombre }}
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="category-actions">
+                                <label class="switch">
+                                    <input type="checkbox" onchange="toggleCategoryStatus({{ categoria.id }}, this)" 
+                                           {% if categoria.activo %}checked{% endif %}>
+                                    <span class="slider round"></span>
+                                </label>
+                                
+                                <div class="action-buttons">
+                                    <button class="btn-icon btn-edit" onclick="editCategory({{ categoria.id }})" title="Editar">
+                                        <ion-icon name="create-outline"></ion-icon>
+                                    </button>
+                                    <button class="btn-icon btn-view" onclick="viewCategory({{ categoria.id }})" title="Ver">
+                                        <ion-icon name="eye-outline"></ion-icon>
+                                    </button>
+                                    <button class="btn-icon btn-delete" onclick="deleteCategory({{ categoria.id }})" title="Eliminar">
+                                        <ion-icon name="trash-outline"></ion-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if categoria.subcategorias %}
+                        <div class="subcategories">
+                            {% for subcategoria in categoria.subcategorias %}
+                                <!-- Subcategoría item -->
+                                <div class="category-item" data-id="{{ subcategoria.id }}">
+                                    <div class="category-header">
+                                        <div class="category-info">
+                                            {% if subcategoria.url_imagen %}
+                                            <div class="category-image">
+                                                <img src="{{ subcategoria.url_imagen }}" alt="{{ subcategoria.nombre }}">
+                                            </div>
+                                            {% else %}
+                                            <div class="category-icon">
+                                                <ion-icon name="folder-outline"></ion-icon>
+                                            </div>
+                                            {% endif %}
+                                            
+                                            <div class="category-details">
+                                                <h3 class="category-name">{{ subcategoria.nombre }}</h3>
+                                                <div class="category-meta">
+                                                    <span class="product-count">
+                                                        <ion-icon name="pricetag-outline"></ion-icon>
+                                                        {{ subcategoria.total_productos }} productos
+                                                    </span>
+                                                    {% if subcategoria.categoria_padre_nombre %}
+                                                    <span class="parent-category">
+                                                        <ion-icon name="git-branch-outline"></ion-icon>
+                                                        {{ subcategoria.categoria_padre_nombre }}
+                                                    </span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="category-actions">
+                                            <label class="switch">
+                                                <input type="checkbox" onchange="toggleCategoryStatus({{ subcategoria.id }}, this)" 
+                                                       {% if subcategoria.activo %}checked{% endif %}>
+                                                <span class="slider round"></span>
+                                            </label>
+                                            
+                                            <div class="action-buttons">
+                                                <button class="btn-icon btn-edit" onclick="editCategory({{ subcategoria.id }})" title="Editar">
+                                                    <ion-icon name="create-outline"></ion-icon>
+                                                </button>
+                                                <button class="btn-icon btn-view" onclick="viewCategory({{ subcategoria.id }})" title="Ver">
+                                                    <ion-icon name="eye-outline"></ion-icon>
+                                                </button>
+                                                <button class="btn-icon btn-delete" onclick="deleteCategory({{ subcategoria.id }})" title="Eliminar">
+                                                    <ion-icon name="trash-outline"></ion-icon>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Mensaje si no hay categorías -->
+            {% if not data.categorias %}
+            <div class="empty-state">
+                <ion-icon name="folder-open-outline"></ion-icon>
+                <p>No hay categorías creadas</p>
+                <button class="btn-primary" onclick="openModal('addCategoryModal')">
+                    <ion-icon name="add-circle-outline"></ion-icon>
+                    Crear Primera Categoría
+                </button>
+            </div>
+            {% endif %}
+        </main>
+    </div>
+    
+    <!-- MODAL AGREGAR/EDITAR CATEGORÍA -->
+    <div id="addCategoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Agregar Nueva Categoría</h2>
+                <button class="modal-close" onclick="closeModal('addCategoryModal')">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+            
+            <form id="categoryForm" enctype="multipart/form-data">
+                <input type="hidden" id="categoryId" name="id">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nombre">Nombre de la Categoría *</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="categoria_padre_id">Categoría Padre</label>
+                        <select id="categoria_padre_id" name="categoria_padre_id">
+                            <option value="">Sin categoría padre (Principal)</option>
+                            {% for cat in data.categorias_selector %}
+                            <option value="{{ cat.id }}">{{ cat.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="descripcion">Descripción</label>
+                        <textarea id="descripcion" name="descripcion" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="orden_visualizacion">Orden de Visualización</label>
+                        <input type="number" id="orden_visualizacion" name="orden_visualizacion" value="0" min="0">
+                        <small class="form-hint">Las categorías se ordenan de menor a mayor</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Estado</label>
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" id="activo" name="activo" checked>
+                                Categoría Activa
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Imagen de la Categoría</label>
+                        <div class="image-upload-area">
+                            <input type="file" id="categoryImage" name="imagen" accept="image/*" onchange="previewImage(this)">
+                            <div class="upload-placeholder">
+                                <ion-icon name="cloud-upload-outline"></ion-icon>
+                                <p>Arrastra la imagen aquí o haz clic para seleccionar</p>
+                                <span class="upload-hint">Formatos aceptados: JPG, PNG, WEBP, GIF</span>
+                            </div>
+                        </div>
+                        <div id="imagePreview" class="image-preview"></div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeModal('addCategoryModal')">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar Categoría</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- MODAL VER CATEGORÍA -->
+    <div id="viewCategoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Detalles de la Categoría</h2>
+                <button class="modal-close" onclick="closeModal('viewCategoryModal')">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+            
+            <div id="categoryDetails" class="category-details">
+                <!-- Los detalles se cargarán dinámicamente -->
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('viewCategoryModal')">Cerrar</button>
+                <button class="btn-primary" id="editCategoryBtn">
+                    <ion-icon name="create-outline"></ion-icon>
+                    Editar Categoría
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- NOTIFICACIONES -->
+    <div class="notification-container"></div>
+</body>
+</html>

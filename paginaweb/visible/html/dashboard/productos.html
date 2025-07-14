@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data.app_name }} - Gestión de Productos</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}">
+    <!-- Ion Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap">
+    <!-- Estilos base comunes -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard/productos.css') }}">
+    <!-- Scripts comunes -->
+    <script src="{{ url_for('static', filename='js/dashboard/productos.js') }}" defer></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}" alt="Logo">
+            </div>
+            
+            <nav class="admin-nav">
+                <ul>
+                    <li>
+                        <a href="{{ url_for('dashboard') }}">
+                            <ion-icon name="grid-outline"></ion-icon>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('dashboard_productos') }}" class="active">
+                            <ion-icon name="bag-handle-outline"></ion-icon>
+                            <span>Productos</span>
+                        </a>
+                    </li>
+                                       <li>
+                        <a href="/dashboard/categorias">
+                            <ion-icon name="pricetags-outline"></ion-icon>
+                            <span>Categorías</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/dashboard/configuracion">
+                            <ion-icon name="settings-outline"></ion-icon>
+                            <span>Configuración</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="admin-content">
+            <!-- HEADER -->
+            <header class="admin-header">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </button>
+                
+                <h1 class="admin-title">Gestión de Productos</h1>
+                
+                <div class="admin-user">
+                    <div class="admin-user-avatar">
+                        <ion-icon name="person"></ion-icon>
+                    </div>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle" onclick="toggleDropdown(this)">
+                            <ion-icon name="ellipsis-vertical"></ion-icon>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="{{ url_for('dashboard') }}" class="dropdown-item">
+                                <ion-icon name="home-outline"></ion-icon>
+                                Dashboard Cliente
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <ion-icon name="person-outline"></ion-icon>
+                                Mi Perfil
+                            </a>
+                            <a href="{{ url_for('logout') }}" class="dropdown-item">
+                                <ion-icon name="log-out-outline"></ion-icon>
+                                Cerrar Sesión
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- ACCIONES Y FILTROS -->
+            <div class="products-actions">
+                <div class="actions-left">
+                    <button class="btn-primary" onclick="openModal('addProductModal')">
+                        <ion-icon name="add-circle-outline"></ion-icon>
+                        <span class="btn-text">Nuevo Producto</span>
+                    </button>
+                    
+                    <div class="search-box">
+                        <ion-icon name="search-outline"></ion-icon>
+                        <input type="text" id="searchInput" placeholder="Buscar productos...">
+                    </div>
+                </div>
+                
+                <div class="actions-right">
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="">Todas las categorías</option>
+                        {% for categoria in data.categorias %}
+                        <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    
+                    <select id="statusFilter" class="filter-select">
+                        <option value="">Todos los estados</option>
+                        <option value="1">Activos</option>
+                        <option value="0">Inactivos</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- TABLA DE PRODUCTOS RESPONSIVA -->
+            <div class="products-table-container">
+                <div class="table-responsive">
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in data.productos %}
+                            <tr data-id="{{ producto.id }}">
+                                <td data-label="Imagen">
+                                    <img src="{{ producto.imagen_principal or url_for('public_files', filename='imagenes/placeholder.jpg') }}" 
+                                         alt="{{ producto.nombre }}" class="product-thumb">
+                                </td>
+                                <td data-label="Nombre">
+                                    <div class="product-name">{{ producto.nombre }}</div>
+                                    <div class="product-badges-cell">
+                                        {% if producto.destacado %}
+                                        <span class="badge destacado">Destacado</span>
+                                        {% endif %}
+                                        {% if producto.nuevo %}
+                                        <span class="badge nuevo">Nuevo</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td data-label="Categoría" data-category-id="{{ producto.categoria_id }}">
+                                    {{ producto.categoria_nombre or 'Sin categoría' }}
+                                </td>
+                                <td data-label="Precio">
+                                    <div class="price-cell">
+                                        {% if producto.precio_descuento %}
+                                        <span class="original-price">${{ "%.2f"|format(producto.precio) }}</span>
+                                        <span class="discount-price">${{ "%.2f"|format(producto.precio_descuento) }}</span>
+                                        <span class="discount-badge">-{{ producto.porcentaje_descuento }}%</span>
+                                        {% else %}
+                                        <span class="current-price">${{ "%.2f"|format(producto.precio) }}</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td data-label="Stock">
+                                    <span class="stock-badge {% if producto.cantidad_stock > 10 %}in-stock{% elif producto.cantidad_stock > 0 %}low-stock{% else %}out-of-stock{% endif %}">
+                                        {{ producto.cantidad_stock }}
+                                    </span>
+                                </td>
+                                <td data-label="Estado">
+                                    <label class="switch">
+                                        <input type="checkbox" onchange="toggleProductStatus({{ producto.id }}, this)" 
+                                               {% if producto.activo %}checked{% endif %}>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </td>
+                                <td data-label="Acciones">
+                                    <div class="action-buttons">
+                                        <button class="btn-icon btn-edit" onclick="editProduct({{ producto.id }})" title="Editar">
+                                            <ion-icon name="create-outline"></ion-icon>
+                                        </button>
+                                        <button class="btn-icon btn-view" onclick="viewProduct({{ producto.id }})" title="Ver">
+                                            <ion-icon name="eye-outline"></ion-icon>
+                                        </button>
+                                        <button class="btn-icon btn-delete" onclick="deleteProduct({{ producto.id }})" title="Eliminar">
+                                            <ion-icon name="trash-outline"></ion-icon>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- PAGINACIÓN -->
+            {% if data.total_pages > 1 %}
+            <div class="pagination">
+                {% if data.current_page > 1 %}
+                <a href="?page={{ data.current_page - 1 }}" class="page-link">
+                    <ion-icon name="chevron-back-outline"></ion-icon>
+                    <span class="page-text">Anterior</span>
+                </a>
+                {% endif %}
+                
+                <div class="page-numbers">
+                    {% for page in range(1, data.total_pages + 1) %}
+                    <a href="?page={{ page }}" class="page-link {% if page == data.current_page %}active{% endif %}">
+                        {{ page }}
+                    </a>
+                    {% endfor %}
+                </div>
+                
+                {% if data.current_page < data.total_pages %}
+                <a href="?page={{ data.current_page + 1 }}" class="page-link">
+                    <span class="page-text">Siguiente</span>
+                    <ion-icon name="chevron-forward-outline"></ion-icon>
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </main>
+    </div>
+    
+    <!-- MODAL AGREGAR/EDITAR PRODUCTO -->
+    <div id="addProductModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Agregar Nuevo Producto</h2>
+                <button class="modal-close" onclick="closeModal('addProductModal')">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+            
+            <form id="productForm" enctype="multipart/form-data">
+                <input type="hidden" id="productId" name="id">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nombre">Nombre del Producto *</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="categoria_id">Categoría *</label>
+                        <select id="categoria_id" name="categoria_id" required>
+                            <option value="">Seleccionar categoría</option>
+                            {% for categoria in data.categorias %}
+                            <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="precio">Precio *</label>
+                        <input type="number" id="precio" name="precio" step="0.01" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="precio_descuento">Precio con Descuento</label>
+                        <input type="number" id="precio_descuento" name="precio_descuento" step="0.01" min="0">
+                        <small id="discount-preview" class="discount-preview"></small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cantidad_stock">Stock *</label>
+                        <input type="number" id="cantidad_stock" name="cantidad_stock" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sku">SKU</label>
+                        <input type="text" id="sku" name="sku">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="descripcion">Descripción Corta</label>
+                        <textarea id="descripcion" name="descripcion" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="descripcion_detallada">Descripción Detallada</label>
+                        <textarea id="descripcion_detallada" name="descripcion_detallada" rows="5"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="material">Material</label>
+                        <input type="text" id="material" name="material">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dimensiones">Dimensiones</label>
+                        <input type="text" id="dimensiones" name="dimensiones" placeholder="largo x ancho x alto">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="peso">Peso (kg)</label>
+                        <input type="number" id="peso" name="peso" step="0.01" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Opciones</label>
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" id="destacado" name="destacado">
+                                Producto Destacado
+                            </label>
+                            <label>
+                                <input type="checkbox" id="nuevo" name="nuevo">
+                                Producto Nuevo
+                            </label>
+                            <label>
+                                <input type="checkbox" id="activo" name="activo" checked>
+                                Activo
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Imágenes del Producto</label>
+                        <div class="image-upload-area">
+                            <input type="file" id="productImages" name="images" multiple accept="image/*" onchange="previewImages(this)">
+                            <div class="upload-placeholder">
+                                <ion-icon name="cloud-upload-outline"></ion-icon>
+                                <p>Arrastra las imágenes aquí o haz clic para seleccionar</p>
+                                <span class="upload-hint">Formatos aceptados: JPG, PNG, WEBP, GIF</span>
+                            </div>
+                        </div>
+                        <div id="imagePreview" class="image-preview-grid"></div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeModal('addProductModal')">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar Producto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- MODAL VER PRODUCTO (diseño mejorado) -->
+    <div id="viewProductModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2>Detalles del Producto</h2>
+                <button class="modal-close" onclick="closeModal('viewProductModal')">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+            
+            <div id="productDetails" class="product-details">
+                <!-- Estructura mejorada - Se completará con JS -->
+                <div class="product-detail-layout">
+                    <!-- Galería de imágenes mejorada -->
+                    <div class="product-gallery">
+                        <div class="main-image-container">
+                            <img src="" alt="Imagen principal del producto" id="mainProductImage" class="main-product-image">
+                            <div class="image-navigation">
+                                <button class="nav-btn prev" onclick="navigateImage('prev')">
+                                    <ion-icon name="chevron-back-outline"></ion-icon>
+                                </button>
+                                <button class="nav-btn next" onclick="navigateImage('next')">
+                                    <ion-icon name="chevron-forward-outline"></ion-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-thumbnails-wrapper">
+                            <div class="product-thumbnails" id="productThumbnails">
+                                <!-- Las miniaturas se cargarán dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Información del producto mejorada -->
+                    <div class="product-info-panel">
+                        <div class="product-header">
+                            <h3 id="productName" class="product-title"></h3>
+                            <div class="product-badges" id="productBadges">
+                                <!-- Los badges se cargarán dinámicamente -->
+                            </div>
+                        </div>
+                        
+                        <div class="product-pricing">
+                            <div class="price-group">
+                                <span class="price-label">Precio:</span>
+                                <span class="price-value" id="productPrice"></span>
+                            </div>
+                            <div class="price-group discount-group" id="discountPriceRow">
+                                <span class="price-label">Precio con descuento:</span>
+                                <span class="price-value discount" id="productDiscountPrice"></span>
+                                <span class="discount-percentage" id="discountPercentage"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="product-info-grid">
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <ion-icon name="grid-outline"></ion-icon>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Categoría</span>
+                                    <span class="info-value" id="productCategory"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <ion-icon name="barcode-outline"></ion-icon>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">SKU</span>
+                                    <span class="info-value" id="productSku"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <ion-icon name="cube-outline"></ion-icon>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Stock</span>
+                                    <span class="info-value" id="productStock"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <ion-icon name="hammer-outline"></ion-icon>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Material</span>
+                                    <span class="info-value" id="productMaterial"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <ion-icon name="resize-outline"></ion-icon>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Dimensiones</span>
+                                    <span class="info-value" id="productDimensions"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <ion-icon name="scale-outline"></ion-icon>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Peso</span>
+                                    <span class="info-value" id="productWeight"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="product-status-info">
+                            <span class="status-label">Estado:</span>
+                            <span class="status-value" id="productStatus"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Descripciones mejoradas -->
+                <div class="product-descriptions">
+                    <div class="description-section" id="shortDescriptionSection">
+                        <h4>Descripción</h4>
+                        <p id="productDescription"></p>
+                    </div>
+                    
+                    <div class="description-section" id="detailedDescriptionSection">
+                        <h4>Descripción Detallada</h4>
+                        <div id="productDetailedDescription"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('viewProductModal')">Cerrar</button>
+                <button class="btn-primary" id="editProductBtn">
+                    <ion-icon name="create-outline"></ion-icon>
+                    Editar Producto
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- NOTIFICACIONES -->
+    <div class="notification-container"></div>
+</body>
+</html>

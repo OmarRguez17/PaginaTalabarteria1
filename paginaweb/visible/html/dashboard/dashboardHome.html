@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data.app_name }} - Panel de Administración</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}">
+    <!-- Ion Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap">
+    
+    <!-- Estilos base comunes -->
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard/dashboardHome.css') }}">
+    
+    <!-- Scripts comunes -->
+    <script src="{{ url_for('static', filename='js/dashboard/dashboardHome.js') }}" defer></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}" alt="Logo">
+            </div>
+            
+            <nav class="admin-nav">
+                <ul>
+                    <li>
+                        <a href="#" class="active">
+                            <ion-icon name="grid-outline"></ion-icon>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/dashboard/productos">
+                            <ion-icon name="bag-handle-outline"></ion-icon>
+                            <span>Productos</span>
+                        </a>
+                    </li>
+                                        <li>
+                        <a href="/dashboard/categorias">
+                            <ion-icon name="pricetags-outline"></ion-icon>
+                            <span>Categorías</span>
+                        </a>
+                    </li>
+                        <!--
+                    
+                    <li>
+                        <a href="#">
+                            <ion-icon name="receipt-outline"></ion-icon>
+                            <span>Pedidos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <ion-icon name="people-outline"></ion-icon>
+                            <span>Clientes</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <ion-icon name="pricetags-outline"></ion-icon>
+                            <span>Categorías</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <ion-icon name="bar-chart-outline"></ion-icon>
+                            <span>Reportes</span>
+                        </a>
+                    </li>-->
+                    <li>
+                        <a href="/dashboard/configuracion">
+                            <ion-icon name="settings-outline"></ion-icon>
+                            <span>Configuración</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="admin-content">
+            
+            <!-- HEADER -->
+            <header class="admin-header">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </button>
+                
+                <h1 class="admin-title">Panel de Administración</h1>
+                
+                <div class="admin-user">
+                    <div class="admin-user-avatar">
+                        <ion-icon name="person"></ion-icon>
+                    </div>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle" onclick="toggleDropdown(this)">
+                            <ion-icon name="ellipsis-vertical"></ion-icon>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="{{ url_for('dashboard') }}" class="dropdown-item">
+                                <ion-icon name="home-outline"></ion-icon>
+                                Dashboard Cliente
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <ion-icon name="person-outline"></ion-icon>
+                                Mi Perfil
+                            </a>
+                            <a href="{{ url_for('logout') }}" class="dropdown-item">
+                                <ion-icon name="log-out-outline"></ion-icon>
+                                Cerrar Sesión
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+                    <!-- Sección de Pedidos Realizados -->
+<!-- Añadir esta sección en el home después de la sección de contacto y antes del newsletter -->
+
+<section id="pedidos-section" class="pedidos-section section-container">
+    <div class="section-header animate-item">
+        <h2>Tus Pedidos Recientes</h2>
+        <p>Historial de compras realizadas</p>
+    </div>
+    
+    <div class="pedidos-container animate-item">
+        <!-- Vista cuando no hay pedidos -->
+        <div id="pedidos-vacio" class="pedidos-vacio">
+            <div class="empty-pedidos-icon">
+                <ion-icon name="receipt-outline"></ion-icon>
+            </div>
+            <h3>No tienes pedidos recientes</h3>
+            <p>Cuando realices tu primera compra, aparecerá aquí.</p>
+            <a href="" class="btn-primary">
+                <ion-icon name="bag-handle-outline"></ion-icon>
+                Explorar Productos
+            </a>
+        </div>
+        
+        <!-- Vista cuando hay pedidos -->
+        <div id="pedidos-lista" class="pedidos-lista hidden">
+            <!-- Los pedidos se cargarán dinámicamente aquí -->
+        </div>
+    </div>
+</section>
+            <!-- ESTADÍSTICAS -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon primary">
+                        <ion-icon name="cart-outline"></ion-icon>
+                    </div>
+                    <div class="stat-value">1,234</div>
+                    <div class="stat-label">Pedidos Totales</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <ion-icon name="cash-outline"></ion-icon>
+                    </div>
+                    <div class="stat-value">$45,678</div>
+                    <div class="stat-label">Ingresos del Mes</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon info">
+                        <ion-icon name="people-outline"></ion-icon>
+                    </div>
+                    <div class="stat-value">892</div>
+                    <div class="stat-label">Clientes Activos</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <ion-icon name="cube-outline"></ion-icon>
+                    </div>
+                    <div class="stat-value">456</div>
+                    <div class="stat-label">Productos</div>
+                </div>
+            </div>
+            
+            <!-- DASHBOARD GRID -->
+            <div class="dashboard-grid">
+                <!-- ACCIONES RÁPIDAS -->
+                <div class="dashboard-card card-third">
+                    <h3 style="margin-bottom: 1rem; color: #8B572A; font-family: 'Playfair Display', serif;">Acciones Rápidas</h3>
+                    <div class="quick-actions">
+                        <a href="/dashboard/productos" class="action-btn">
+                            <ion-icon name="add-circle-outline"></ion-icon>
+                            Nuevo Producto
+                        </a>
+                        <!--
+                        <a href="#" class="action-btn">
+                            <ion-icon name="person-add-outline"></ion-icon>
+                            Nuevo Cliente
+                        </a>
+                        <a href="#" class="action-btn">
+                            <ion-icon name="receipt-outline"></ion-icon>
+                            Ver Pedidos
+                        </a>
+                        <a href="#" class="action-btn">
+                            <ion-icon name="download-outline"></ion-icon>
+                            Exportar Datos
+                        </a>-->
+                    </div>
+                </div>
+                
+                <!-- GRÁFICO DE VENTAS -->
+                <div class="dashboard-card card-two-thirds">
+                    <h3 style="margin-bottom: 1rem; color: #8B572A; font-family: 'Playfair Display', serif;">Ventas del Último Mes</h3>
+                    <div class="chart-placeholder">
+                        Gráfico de ventas (Integrar Chart.js)
+                    </div>
+                </div>
+                
+                <!-- ACTIVIDAD RECIENTE -->
+                <div class="dashboard-card card-half">
+                    <h3 style="margin-bottom: 1rem; color: #8B572A; font-family: 'Playfair Display', serif;">Actividad Reciente</h3>
+                    <ul class="activity-list">
+                        <li class="activity-item">
+                            <div class="activity-icon order">
+                                <ion-icon name="cart"></ion-icon>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Nuevo pedido #1234</div>
+                                <div class="activity-time">Hace 5 minutos</div>
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-icon user">
+                                <ion-icon name="person"></ion-icon>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Nuevo cliente registrado</div>
+                                <div class="activity-time">Hace 15 minutos</div>
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-icon product">
+                                <ion-icon name="cube"></ion-icon>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Producto actualizado</div>
+                                <div class="activity-time">Hace 1 hora</div>
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-icon order">
+                                <ion-icon name="cart"></ion-icon>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Pedido #1233 enviado</div>
+                                <div class="activity-time">Hace 2 horas</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- PRODUCTOS MÁS VENDIDOS -->
+                <div class="dashboard-card card-half">
+                    <h3 style="margin-bottom: 1rem; color: #8B572A; font-family: 'Playfair Display', serif;">Productos Más Vendidos</h3>
+                    <div class="chart-placeholder">
+                        Gráfico de productos (Integrar Chart.js)
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

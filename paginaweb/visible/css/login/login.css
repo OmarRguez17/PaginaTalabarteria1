@@ -1,0 +1,737 @@
+
+/* ----- ESTILOS GENERALES ----- */
+.main-content {
+    padding: 0;
+    width: 100%;
+    overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5% 0;
+    background-color: #FAF8F1; /* Blanco Hueso */
+}
+
+/* ----- ANIMACIONES Y ESQUELETOS DE CARGA ----- */
+.page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #FAF8F1; /* Blanco Hueso */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.page-loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.spinner {
+    width: 4em;
+    height: 4em;
+    border: 0.3em solid #E8D4B9; /* Beige Cuero */
+    border-top: 0.3em solid #8B572A; /* Café Mezclilla */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1em;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ----- CONTENEDOR PRINCIPAL DE LOGIN ----- */
+.login-container {
+    display: flex;
+    width: 90%;
+    max-width: 1200px;
+    min-height: 600px;
+    background-color: #ffffff;
+    border-radius: 1em;
+    overflow: hidden;
+    box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.1);
+    margin: 3% auto;
+}
+
+/* ----- PANEL IZQUIERDO ----- */
+.login-left-panel {
+    width: 45%;
+    background-color: #8B572A; /* Café Mezclilla */
+    background-image: linear-gradient(135deg, #8B572A 0%, #D4B483 100%); /* Café Mezclilla a Arena Dorada */
+    color: #FAF8F1; /* Blanco Hueso */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5%;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-left-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+    opacity: 0.5;
+}
+
+.login-hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.login-logo {
+    margin-bottom: 10%;
+}
+
+.login-logo img {
+    width: 30%;
+    max-width: 120px;
+    height: auto;
+    filter: drop-shadow(0 0.2em 0.5em rgba(0, 0, 0, 0.2));
+}
+
+.login-hero-content h1 {
+    font-size: 2.2em;
+    margin-bottom: 5%;
+    font-family: 'Playfair Display', serif;
+}
+
+.login-hero-content p {
+    font-size: 1em;
+    margin-bottom: 10%;
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+.login-features {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    text-align: left;
+    max-width: 80%;
+    margin: 0 auto;
+}
+
+.login-feature {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    font-size: 1em;
+}
+
+.login-feature ion-icon {
+    font-size: 1.5em;
+    color: #E27D60; /* Terracota */
+}
+
+/* ----- PANEL DERECHO ----- */
+.login-right-panel {
+    width: 55%;
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-form-container {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+/* ----- TABS ----- */
+.login-tabs {
+    display: flex;
+    margin-bottom: 8%;
+    border-bottom: 1px solid #E8D4B9; /* Beige Cuero */
+}
+
+.login-tab-btn {
+    flex: 1;
+    padding: 3% 0;
+    background: none;
+    border: none;
+    color: #6D6875; /* Gris Piedra */
+    font-size: 1.1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    font-family: 'Rubik', sans-serif;
+}
+
+.login-tab-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #E27D60; /* Terracota */
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.login-tab-btn.active {
+    color: #8B572A; /* Café Mezclilla */
+}
+
+.login-tab-btn.active::after {
+    transform: scaleX(1);
+}
+
+.login-tab-content {
+    display: none;
+}
+
+.login-tab-content.active {
+    display: block;
+}
+
+.login-tab-content h2 {
+    font-size: 1.8em;
+    color: #8B572A; /* Café Mezclilla */
+    margin-bottom: 2%;
+    font-family: 'Playfair Display', serif;
+}
+
+.login-tab-content p {
+    color: #6D6875; /* Gris Piedra */
+    margin-bottom: 8%;
+    font-size: 0.95em;
+}
+
+/* ----- FORMULARIOS ----- */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+}
+
+.form-row {
+    display: flex;
+    gap: 5%;
+}
+
+.form-field {
+    width: 100%;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 0.5em;
+    color: #231F20; /* Negro Mezcal */
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.input-icon-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.input-icon-wrapper ion-icon {
+    position: absolute;
+    left: 1em;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #8B572A; /* Café Mezclilla */
+    font-size: 1.2em;
+}
+
+.input-icon-wrapper input {
+    width: 100%;
+    padding: 1em 1em 1em 3em;
+    border: 1px solid #D4B483; /* Arena Dorada */
+    border-radius: 0.5em;
+    font-size: 1em;
+    color: #231F20; /* Negro Mezcal */
+    transition: all 0.3s ease;
+}
+
+.input-icon-wrapper input:focus {
+    outline: none;
+    border-color: #8B572A; /* Café Mezclilla */
+    box-shadow: 0 0 0 3px rgba(139, 87, 42, 0.1);
+}
+
+.password-toggle {
+    position: absolute;
+    right: 1em;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6D6875; /* Gris Piedra */
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.2em;
+}
+
+.password-toggle:hover {
+    color: #8B572A; /* Café Mezclilla */
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1em;
+    margin-bottom: 5%;
+}
+
+.remember-me, .terms-agree {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.remember-me input[type="checkbox"],
+.terms-agree input[type="checkbox"] {
+    width: 1.2em;
+    height: 1.2em;
+    accent-color: #8B572A; /* Café Mezclilla */
+}
+
+.remember-me label,
+.terms-agree label {
+    color: #6D6875; /* Gris Piedra */
+    font-size: 0.9em;
+}
+
+.forgot-password {
+    color: #1A759F; /* Azul Índigo */
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: color 0.2s ease;
+}
+
+.forgot-password:hover {
+    color: #E27D60; /* Terracota */
+    text-decoration: underline;
+}
+
+.terms-agree a {
+    color: #1A759F; /* Azul Índigo */
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.terms-agree a:hover {
+    color: #E27D60; /* Terracota */
+    text-decoration: underline;
+}
+
+/* ----- BOTONES ----- */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    background-color: #E27D60; /* Terracota */
+    color: #FAF8F1; /* Blanco Hueso */
+    padding: 1em 2em;
+    border-radius: 0.5em;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    text-align: center;
+    box-shadow: 0 0.3em 0.8em rgba(226, 125, 96, 0.3);
+    width: 100%;
+    font-family: 'Rubik', sans-serif;
+}
+
+.btn-primary:hover {
+    background-color: #c05a3e; /* Terracota oscuro */
+    transform: translateY(-0.2em);
+    box-shadow: 0 0.5em 1em rgba(226, 125, 96, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(-0.1em);
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #8B572A; /* Café Mezclilla */
+    padding: 0.8em;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.95em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    margin-top: 1em;
+    transition: color 0.2s ease;
+    font-family: 'Rubik', sans-serif;
+}
+
+.btn-link:hover {
+    color: #E27D60; /* Terracota */
+}
+
+.btn-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    padding: 0.8em;
+    border-radius: 0.5em;
+    border: 1px solid #E8D4B9; /* Beige Cuero */
+    background-color: #ffffff;
+    color: #6D6875; /* Gris Piedra */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 48%;
+    font-size: 0.95em;
+    font-family: 'Rubik', sans-serif;
+}
+
+.btn-social:hover {
+    background-color: #f9f9f9;
+    transform: translateY(-0.2em);
+}
+
+.btn-google ion-icon {
+    color: #DB4437; /* Color Google */
+}
+
+.btn-facebook ion-icon {
+    color: #4267B2; /* Color Facebook */
+}
+
+/* ----- INICIAR SESIÓN CON REDES SOCIALES ----- */
+.social-login {
+    margin-top: 10%;
+    text-align: center;
+}
+
+.social-login p {
+    color: #6D6875; /* Gris Piedra */
+    margin-bottom: 1em;
+    font-size: 0.9em;
+}
+
+.social-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 4%;
+}
+
+/* ----- ALERTA DE MENSAJES ----- */
+.login-alert {
+    background-color: #FFF3CD; /* Amarillo claro */
+    border-left: 4px solid #FFC107; /* Amarillo */
+    color: #856404; /* Texto amarillo oscuro */
+    padding: 1em;
+    border-radius: 0.5em;
+    margin-bottom: 1.5em;
+    display: flex;
+    align-items: flex-start;
+}
+
+.login-alert ion-icon {
+    font-size: 1.5em;
+    margin-right: 0.5em;
+    flex-shrink: 0;
+}
+
+.login-alert-message {
+    flex: 1;
+    font-size: 0.95em;
+}
+
+.login-alert-close {
+    background: none;
+    border: none;
+    color: #856404; /* Texto amarillo oscuro */
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.2em;
+    margin-left: 0.5em;
+}
+
+.login-alert.error {
+    background-color: #F8D7DA; /* Rojo claro */
+    border-left-color: #9B2226; /* Rojo Artesanal */
+    color: #721C24; /* Texto rojo oscuro */
+}
+
+.login-alert.success {
+    background-color: #D4EDDA; /* Verde claro */
+    border-left-color: #4F7942; /* Verde Agave */
+    color: #155724; /* Texto verde oscuro */
+}
+
+/* ----- REQUISITOS DE CONTRASEÑA ----- */
+.password-requirements {
+    background-color: #f9f9f9;
+    padding: 1em;
+    border-radius: 0.5em;
+    margin-top: 0.5em;
+    font-size: 0.85em;
+}
+
+.password-requirements p {
+    margin-bottom: 0.5em;
+    color: #231F20; /* Negro Mezcal */
+    font-weight: 500;
+}
+
+.password-requirements ul {
+    list-style-type: none;
+    padding-left: 0.5em;
+    margin: 0;
+}
+
+.password-requirements li {
+    position: relative;
+    padding-left: 1.5em;
+    margin-bottom: 0.3em;
+    color: #6D6875; /* Gris Piedra */
+}
+
+.password-requirements li::before {
+    content: "✕";
+    position: absolute;
+    left: 0;
+    color: #9B2226; /* Rojo Artesanal */
+}
+
+.password-requirements li.valid::before {
+    content: "✓";
+    color: #4F7942; /* Verde Agave */
+}
+
+/* ----- NOTIFICACIONES ----- */
+.notification-container {
+    position: fixed;
+    top: 5%;
+    right: 5%;
+    z-index: 1000;
+    width: 20em;
+}
+
+.notification {
+    background-color: white;
+    border-radius: 0.5em;
+    padding: 1em;
+    margin-bottom: 0.8em;
+    box-shadow: 0 0.3em 1em rgba(0, 0, 0, 0.1);
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: flex-start;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    border-left: 0.25em solid #4F7942; /* Verde Agave */
+}
+
+.notification.error {
+    border-left: 0.25em solid #9B2226; /* Rojo Artesanal */
+}
+
+.notification.info {
+    border-left: 0.25em solid #1A759F; /* Azul Índigo */
+}
+
+.notification-icon {
+    margin-right: 5%;
+    font-size: 1.5em;
+}
+
+.notification.success .notification-icon {
+    color: #4F7942; /* Verde Agave */
+}
+
+.notification.error .notification-icon {
+    color: #9B2226; /* Rojo Artesanal */
+}
+
+.notification.info .notification-icon {
+    color: #1A759F; /* Azul Índigo */
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-title {
+    font-weight: 600;
+    margin-bottom: 2%;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+    color: #6D6875; /* Gris Piedra */
+    padding: 0;
+    margin-left: 3%;
+}
+
+.notification-close:hover {
+    opacity: 1;
+}
+
+/* ----- EFECTOS DE FONDO ----- */
+.background-effect {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    background: linear-gradient(135deg, rgba(232, 212, 185, 0.05) 0%, rgba(139, 87, 42, 0.05) 100%);
+}
+
+/* ----- VALIDACIÓN DE FORMULARIO ----- */
+.input-error {
+    border-color: #9B2226 !important; /* Rojo Artesanal */
+}
+
+.error-message {
+    color: #9B2226; /* Rojo Artesanal */
+    font-size: 0.85em;
+    margin-top: 0.3em;
+}
+
+/* ----- RESPONSIVE DESIGN ----- */
+@media (max-width: 992px) {
+    .login-container {
+        flex-direction: column;
+        max-width: 600px;
+    }
+    
+    .login-left-panel,
+    .login-right-panel {
+        width: 100%;
+    }
+    
+    .login-left-panel {
+        padding: 8% 5%;
+        min-height: 250px;
+    }
+    
+    .login-hero-content h1 {
+        font-size: 2em;
+    }
+    
+    .login-hero-content p {
+        font-size: 0.95em;
+        margin-bottom: 5%;
+    }
+    
+    .login-features {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1.5em;
+    }
+    
+    .login-feature {
+        width: 45%;
+    }
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        width: 95%;
+    }
+    
+    .login-tab-btn {
+        font-size: 1em;
+    }
+    
+    .login-tab-content h2 {
+        font-size: 1.6em;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 1.5em;
+    }
+    
+    .form-options {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .social-buttons {
+        flex-direction: column;
+        gap: 1em;
+    }
+    
+    .btn-social {
+        width: 100%;
+    }
+    
+    .login-features {
+        flex-direction: column;
+    }
+    
+    .login-feature {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh;
+    }
+    
+    .login-left-panel {
+        padding: 10% 5%;
+    }
+    
+    .login-right-panel {
+        padding: 8% 5%;
+    }
+    
+    .login-tab-btn {
+        font-size: 0.9em;
+    }
+    
+    .login-tab-content h2 {
+        font-size: 1.4em;
+    }
+    
+    .login-tab-content p {
+        font-size: 0.9em;
+    }
+    
+    .input-icon-wrapper input {
+        font-size: 0.95em;
+    }
+}

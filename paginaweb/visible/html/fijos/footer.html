@@ -1,0 +1,80 @@
+<!-- Footer elegante pero simple -->
+<footer class="elegant-footer">
+    <div class="footer-wave"></div>
+    
+    <div class="container">
+        <div class="footer-content">
+            <!-- Logo y descripción -->
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <img src="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}" alt="{{ data.app_name }}">
+                    <h2>{{ data.app_name }}</h2>
+                </div>
+                <p class="footer-description">Ofrecemos productos de talabartería de calidad premium, elaborados con técnicas tradicionales y materiales seleccionados.</p>
+                <div class="footer-quality">
+                    <span class="quality-tag"><ion-icon name="ribbon-outline"></ion-icon> Calidad Premium</span>
+                    <span class="quality-tag"><ion-icon name="hand-left-outline"></ion-icon> Artesanal</span>
+                </div>
+            </div>
+            
+            <!-- Enlaces útiles -->
+            <div class="footer-links">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="/"><ion-icon name="home-outline"></ion-icon> Inicio</a></li>
+                    <li><a href="/nosotros"><ion-icon name="people-outline"></ion-icon> Nosotros</a></li>
+                    <li><a href="/servicios"><ion-icon name="construct-outline"></ion-icon> Servicios</a></li>
+                    <li><a href="/productos"><ion-icon name="bag-outline"></ion-icon> Productos</a></li>
+                    <li><a href="/contacto"><ion-icon name="call-outline"></ion-icon> Contacto</a></li>
+                </ul>
+            </div>
+            
+            <!-- Contacto e información -->
+            <div class="footer-contact">
+                <h3>Contacto</h3>
+                <ul class="contact-list">
+                    <li><ion-icon name="location-outline"></ion-icon> Independencia #317, Cocula Jalisco</li>
+                    <li><ion-icon name="call-outline"></ion-icon> (+52) 375-118-2715</li>
+                    <li><ion-icon name="mail-outline"></ion-icon> info@talabarteria.com</li>
+                    <li><ion-icon name="time-outline"></ion-icon> Lun - Sáb: 9:00 AM - 7:00 PM</li>
+                </ul>
+            </div>
+            
+            <!-- Suscripción y redes sociales -->
+            <div class="footer-connect">
+                <h3>Mantente Conectado</h3>
+                <form class="subscribe-form">
+                    <div class="input-container">
+                        <input type="email" placeholder="Tu correo electrónico" required>
+                        <button type="submit"><ion-icon name="paper-plane-outline"></ion-icon></button>
+                    </div>
+                </form>
+                <div class="social-media">
+                    <a href="#" class="social-icon" aria-label="Facebook"><ion-icon name="logo-facebook"></ion-icon></a>
+                    <a href="#" class="social-icon" aria-label="Instagram"><ion-icon name="logo-instagram"></ion-icon></a>
+                    <a href="#" class="social-icon" aria-label="Twitter"><ion-icon name="logo-twitter"></ion-icon></a>
+                    <a href="#" class="social-icon" aria-label="WhatsApp"><ion-icon name="logo-whatsapp"></ion-icon></a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Línea divisoria -->
+        <div class="footer-divider"></div>
+        
+        <!-- Copyright -->
+        <div class="footer-bottom">
+            <div class="copyright">
+                <p>&copy; <span class="current-year">2025</span> {{ data.company_name }}. Todos los derechos reservados.</p>
+            </div>
+            <div class="footer-badges">
+                <span class="badge"><ion-icon name="shield-checkmark-outline"></ion-icon> Compra Segura</span>
+                <span class="version-badge">v{{ data.version }}</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Botón volver arriba -->
+    <button id="backToTop" class="back-to-top" aria-label="Volver arriba">
+        <ion-icon name="chevron-up-outline"></ion-icon>
+    </button>
+</footer>

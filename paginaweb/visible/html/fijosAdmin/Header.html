@@ -1,0 +1,123 @@
+<!-- Header para administrador -->
+<header>
+    <div class="container">
+        <div class="header-content">
+            <!-- Logo -->
+            <div class="logo">
+                <div class="logo-img-container">
+                    <img src="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}" alt="{{ data.app_name }}">
+                </div>
+                <div class="logo-text">
+                    <h1>{{ data.app_name }} - Admin</h1>
+                </div>
+            </div>
+            
+            <!-- Navegación principal con efectos mejorados - Solo visible en pantallas grandes -->
+            <nav id="mainNav">
+                <ul id="mainMenu">
+                    <li>
+                        <a href="/admin" class="nav-link {% if request.path == '/admin' %}active{% endif %}">
+                            <ion-icon name="home-outline"></ion-icon>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/productos" class="nav-link {% if '/admin/productos' in request.path %}active{% endif %}">
+                            <ion-icon name="pricetag-outline"></ion-icon>
+                            <span>Productos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/categorias" class="nav-link {% if '/admin/categorias' in request.path %}active{% endif %}">
+                            <ion-icon name="folder-outline"></ion-icon>
+                            <span>Categorías</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/pedidos" class="nav-link {% if '/admin/pedidos' in request.path %}active{% endif %}">
+                            <ion-icon name="bag-check-outline"></ion-icon>
+                            <span>Pedidos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/usuarios" class="nav-link {% if '/admin/usuarios' in request.path %}active{% endif %}">
+                            <ion-icon name="people-outline"></ion-icon>
+                            <span>Usuarios</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/resenas" class="nav-link {% if '/admin/resenas' in request.path %}active{% endif %}">
+                            <ion-icon name="star-outline"></ion-icon>
+                            <span>Reseñas</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <!-- Acciones de usuario para el menú móvil - Solo visible en pantallas pequeñas -->
+                <div class="user-actions-mobile">
+                    <div class="user-welcome">
+                        <div class="user-avatar">
+                            <ion-icon name="shield-checkmark-outline"></ion-icon>
+                        </div>
+                        <span class="action-text">Admin: {{ session.usuario.nombre }}</span>
+                    </div>
+                    <a href="/admin/perfil" class="user-action">
+                        <div class="action-icon">
+                            <ion-icon name="settings-outline"></ion-icon>
+                        </div>
+                        <span class="action-text">Configuración</span>
+                    </a>
+                    <a href="/admin/logout" class="user-action logout-link">
+                        <div class="action-icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </div>
+                        <span class="action-text">Salir</span>
+                    </a>
+                </div>
+            </nav>
+            
+            <!-- Acciones de usuario con nuevo diseño (solo visibles en pantalla grande) -->
+            <div class="user-actions">
+                <div class="user-welcome">
+                    <div class="user-avatar">
+                        <ion-icon name="shield-checkmark-outline"></ion-icon>
+                    </div>
+                    <span class="action-text">Admin: {{ session.usuario.nombre }}</span>
+                </div>
+                <a href="/admin/perfil" class="user-action">
+                    <div class="action-icon">
+                        <ion-icon name="settings-outline"></ion-icon>
+                    </div>
+                    <span class="action-text">Config</span>
+                </a>
+                <a href="/admin/logout" class="user-action logout-link">
+                    <div class="action-icon">
+                        <ion-icon name="log-out-outline"></ion-icon>
+                    </div>
+                    <span class="action-text">Salir</span>
+                </a>
+                <a href="/" class="user-action" title="Ver tienda">
+                    <div class="action-icon">
+                        <ion-icon name="storefront-outline"></ion-icon>
+                    </div>
+                    <span class="action-text">Tienda</span>
+                </a>
+            </div>
+            
+            <!-- Botón de menú móvil con animación -->
+            <button class="mobile-menu-toggle" aria-label="Menú" id="menuToggle">
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Overlay para cuando el menú móvil está activo -->
+<div class="menu-overlay" id="menuOverlay"></div>
+
+<!-- Contenedor de notificaciones mejorado -->
+<div class="notification-container"></div>

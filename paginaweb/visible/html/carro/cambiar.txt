@@ -1,0 +1,141 @@
+// GUÍA PARA MODIFICAR IMPUESTOS Y COSTOS DE ENVÍO
+
+// ----------------------------------------------------------------
+// 1. MODIFICAR EL IMPUESTO (ACTUALMENTE 16%)
+// ----------------------------------------------------------------
+
+// En el archivo carro.js, busca la función updateCarritoTotals() y modifica la línea:
+const impuestos = subtotal * 0.16;
+
+// Cambia 0.16 por el porcentaje deseado en formato decimal:
+// Por ejemplo, para 10%:
+const impuestos = subtotal * 0.10;
+// Para 20%:
+const impuestos = subtotal * 0.20;
+
+// También actualiza el texto en el HTML que muestra el porcentaje:
+// Busca: <span>Impuestos (16%)</span>
+// Cámbialo al nuevo porcentaje, ejemplo: <span>Impuestos (10%)</span>
+
+// ----------------------------------------------------------------
+// 2. MODIFICAR EL COSTO DE ENVÍO
+// ----------------------------------------------------------------
+
+// El costo de envío se calcula en la función calcularCostoEnvio().
+// Puedes modificar diferentes partes:
+
+// A) CAMBIAR LOS RANGOS DE PRECIOS Y COSTOS BASE:
+function calcularCostoEnvio(subtotal, metodoEnvio) {
+  // Tabla de costos base según rango de subtotal
+  let costoBase = 0;
+  
+  if (subtotal <= 500) {
+      costoBase = 80;        // <-- Modifica este valor
+  } else if (subtotal <= 1000) {
+      costoBase = 120;       // <-- Modifica este valor
+  } else if (subtotal <= 2000) {
+      costoBase = 150;       // <-- Modifica este valor
+  } else if (subtotal <= 5000) {
+      costoBase = 200;       // <-- Modifica este valor
+  } else {
+      // Para compras mayores a $5000, el envío base es gratuito
+      costoBase = 0;
+  }
+  
+  // Multiplicar por factor según método de envío
+  if (metodoEnvio === 'express') {
+      costoBase = costoBase * 1.5; // <-- Modifica este multiplicador (1.5 = 50% más caro)
+  }
+  
+  return costoBase;
+}
+
+// ----------------------------------------------------------------
+// EJEMPLOS PRÁCTICOS
+// ----------------------------------------------------------------
+
+// EJEMPLO 1: COSTO DE ENVÍO FIJO PARA TODOS LOS PEDIDOS
+function calcularCostoEnvio(subtotal, metodoEnvio) {
+    // Costo fijo para todos los pedidos
+    let costoBase = 100;
+    
+    // Solo el envío express sigue siendo más caro
+    if (metodoEnvio === 'express') {
+        costoBase = costoBase * 1.5;
+    }
+    
+    return costoBase;
+}
+
+// EJEMPLO 2: ENVÍO GRATIS PARA PEDIDOS MAYORES DE $1000
+function calcularCostoEnvio(subtotal, metodoEnvio) {
+    let costoBase = 0;
+    
+    if (subtotal <= 1000) {
+        costoBase = 120; // Cobrar solo a pedidos menores a $1000
+    }
+    
+    if (metodoEnvio === 'express') {
+        costoBase = costoBase * 1.5;
+    }
+    
+    return costoBase;
+}
+
+// EJEMPLO 3: ENVÍO GRATUITO PARA TODOS
+function calcularCostoEnvio(subtotal, metodoEnvio) {
+    return 0; // Siempre gratis
+}
+
+// EJEMPLO 4: DIFERENTES MULTIPLICADORES PARA EXPRESS
+function calcularCostoEnvio(subtotal, metodoEnvio) {
+    let costoBase = 0;
+    
+    if (subtotal <= 500) {
+        costoBase = 80;
+    } else if (subtotal <= 1000) {
+        costoBase = 120;
+    } else if (subtotal <= 2000) {
+        costoBase = 150;
+    } else if (subtotal <= 5000) {
+        costoBase = 200;
+    } else {
+        costoBase = 0;
+    }
+    
+    // Envío express es el doble de caro
+    if (metodoEnvio === 'express') {
+        costoBase = costoBase * 2.0; // 100% más para envío express
+    }
+    
+    return costoBase;
+}
+
+// ----------------------------------------------------------------
+// 3. IMPORTANTE: TAMBIÉN ACTUALIZAR EL BACKEND
+// ----------------------------------------------------------------
+
+// Para mantener la consistencia, también modifica la función en el archivo CarroController.py:
+
+def _calcular_costo_envio(self, subtotal, metodo_envio):
+    """Calcula el costo de envío dinámico basado en el subtotal"""
+    # Tabla de costos base según rango de subtotal
+    costo_base = 0
+    
+    if subtotal <= 500:
+        costo_base = 80        # <-- Modifica este valor
+    elif subtotal <= 1000:
+        costo_base = 120       # <-- Modifica este valor
+    elif subtotal <= 2000:
+        costo_base = 150       # <-- Modifica este valor
+    elif subtotal <= 5000:
+        costo_base = 200       # <-- Modifica este valor
+    else:
+        # Para compras mayores a $5000, el envío base es gratuito
+        costo_base = 0
+    
+    # Multiplicar por factor según método de envío
+    if metodo_envio == 'express':
+        costo_base = costo_base * 1.5  # <-- Modifica este multiplicador
+    
+    return costo_base

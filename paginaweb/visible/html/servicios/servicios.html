@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestros Productos - {{ data.company_name }}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}">
+    
+    <!-- Ion Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap">
+    
+    <!-- Estilos base comunes -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fijos/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fijos/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/servicios/servicios.css') }}">
+    
+    <!-- Scripts comunes -->
+    <script src="{{ url_for('static', filename='js/fijos/header.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/fijos/footer.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/servicios/servicios.js') }}" defer></script>
+</head>
+<body>
+    
+    <!-- Incluir el header -->
+    {% include 'fijos/header.html' %}
+
+    <!-- Contenedor de notificaciones -->
+    <div class="notification-container"></div>
+    
+    <!-- Indicador de carga principal -->
+    <div class="page-loader">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+    </div>
+    
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <!-- Encabezado de la página -->
+        <section class="servicios-header section-container">
+            <div class="section-header animate-item">
+                <h1>Nuestros Productos Artesanales</h1>
+                <p>Calidad y tradición en cada pieza - Elaborados a mano en Cocula, Jalisco</p>
+            </div>
+            
+            <!-- Buscador -->
+            <div class="buscador-container animate-item">
+                <form class="buscador-form" id="buscador-form">
+                    <div class="buscador-input">
+                        <ion-icon name="search-outline"></ion-icon>
+                        <input type="text" placeholder="Buscar productos..." id="buscador-termino">
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        <ion-icon name="search"></ion-icon>
+                        Buscar
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Filtros y Categorías -->
+        <section class="filtros-section section-container">
+            <div class="filtros-container animate-item">
+                <div class="categorias-filtro">
+                    <h2>Categorías</h2>
+                    <ul class="lista-categorias">
+                        <li>
+                            <button class="categoria-btn active" data-categoria="todas">
+                                Todas las categorías
+                            </button>
+                        </li>
+                        {% for categoria in data.categorias %}
+                        <li>
+                            <button class="categoria-btn" data-categoria="{{ categoria.id }}">
+                                {{ categoria.nombre }}
+                                <span class="count">({{ categoria.productos_count }})</span>
+                            </button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div class="filtros-opciones">
+                    <h2>Filtrar por</h2>
+                    
+                    <div class="filtro-grupo">
+                        <h3>Precio</h3>
+                        <div class="filtro-rango">
+                            <input type="range" id="precio-rango" min="0" max="{{ data.precio_max }}" step="100" value="{{ data.precio_max }}">
+                            <div class="rango-valores">
+                                <span>$0</span>
+                                <span id="precio-valor">${{ data.precio_max }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filtro-grupo">
+                        <h3>Estado</h3>
+                        <div class="filtro-checkbox">
+                            <input type="checkbox" id="filtro-descuento" value="descuento">
+                            <label for="filtro-descuento">En oferta</label>
+                        </div>
+                        <div class="filtro-checkbox">
+                            <input type="checkbox" id="filtro-nuevo" value="nuevo">
+                            <label for="filtro-nuevo">Nuevos productos</label>
+                        </div>
+                        <div class="filtro-checkbox">
+                            <input type="checkbox" id="filtro-destacado" value="destacado">
+                            <label for="filtro-destacado">Destacados</label>
+                        </div>
+                    </div>
+                    
+                    <div class="filtro-grupo">
+                        <h3>Material</h3>
+                        <div class="filtro-seleccion">
+                            <select id="filtro-material">
+                                <option value="">Todos los materiales</option>
+                                {% for material in data.materiales %}
+                                <option value="{{ material }}">{{ material }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button id="aplicar-filtros" class="btn-primary btn-block">
+                        <ion-icon name="filter-outline"></ion-icon>
+                        Aplicar Filtros
+                    </button>
+                    
+                    <button id="limpiar-filtros" class="btn-secondary btn-block">
+                        <ion-icon name="refresh-outline"></ion-icon>
+                        Limpiar Filtros
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Resultados de la búsqueda -->
+            <div class="productos-container animate-item">
+                <div class="productos-header">
+                    <div class="productos-encontrados">
+                        <span id="productos-count">{{ data.productos|length }}</span> productos encontrados
+                    </div>
+                    
+                    <div class="productos-orden">
+                        <label for="orden-selector">Ordenar por:</label>
+                        <select id="orden-selector">
+                            <option value="relevancia">Relevancia</option>
+                            <option value="precio-asc">Precio: Menor a Mayor</option>
+                            <option value="precio-desc">Precio: Mayor a Menor</option>
+                            <option value="nombre-asc">Nombre: A-Z</option>
+                            <option value="nombre-desc">Nombre: Z-A</option>
+                            <option value="nuevos">Más recientes</option>
+                        </select>
+                    </div>
+                    
+                    <div class="vista-botones">
+                        <button class="vista-btn active" data-vista="grid">
+                            <ion-icon name="grid-outline"></ion-icon>
+                        </button>
+                        <button class="vista-btn" data-vista="list">
+                            <ion-icon name="list-outline"></ion-icon>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Grid de productos -->
+                <div class="productos-grid" id="productos-grid">
+                    {% for producto in data.productos %}
+                    <div class="producto-card" 
+                         data-id="{{ producto.id }}"
+                         data-categoria="{{ producto.categoria_id }}"
+                         data-precio="{{ producto.precio_descuento if producto.precio_descuento else producto.precio }}"
+                         data-descuento="{{ 1 if producto.precio_descuento else 0 }}"
+                         data-nuevo="{{ 1 if producto.nuevo else 0 }}"
+                         data-destacado="{{ 1 if producto.destacado else 0 }}"
+                         data-material="{{ producto.material }}">
+                        {% if producto.destacado %}
+                        <div class="producto-badge">Destacado</div>
+                        {% endif %}
+                        {% if producto.nuevo %}
+                        <div class="producto-badge new-badge">Nuevo</div>
+                        {% endif %}
+                        <div class="producto-imagen skeleton-loading">
+                            {% if producto.imagen_principal %}
+                            <img data-src="{{ producto.imagen_principal }}" alt="{{ producto.nombre }}" class="lazy-image">
+                            {% else %}
+                            <img data-src="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}" alt="{{ producto.nombre }}" class="lazy-image">
+                            {% endif %}
+                        </div>
+                        <div class="producto-content">
+                            <h3>{{ producto.nombre }}</h3>
+                            <p class="producto-categoria">{{ producto.categoria_nombre }}</p>
+                            <div class="producto-precio">
+                                {% if producto.precio_descuento %}
+                                <span class="price-discount">${{ producto.precio_descuento }}</span>
+                                <span class="price-original">${{ producto.precio }}</span>
+                                <span class="discount-badge">{{ producto.porcentaje_descuento }}% OFF</span>
+                                {% else %}
+                                <span class="price-normal">${{ producto.precio }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="producto-actions">
+                                <a href="{{ url_for('detalle_servicio', servicio_id=producto.id) }}" class="btn-secondary btn-view">
+                                    <ion-icon name="eye-outline"></ion-icon>
+                                    Ver Detalles
+                                </a>
+                                <button class="btn-primary btn-add-cart" data-product-id="{{ producto.id }}">
+                                    <ion-icon name="cart-outline"></ion-icon>
+                                    Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Mensaje de no resultados -->
+                <div class="no-resultados hidden" id="no-resultados">
+                    <div class="no-resultados-icon">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </div>
+                    <h2>No se encontraron productos</h2>
+                    <p>Intenta con otros criterios de búsqueda o revisa los filtros aplicados.</p>
+                    <button id="reset-busqueda" class="btn-primary">
+                        <ion-icon name="refresh-outline"></ion-icon>
+                        Reiniciar Búsqueda
+                    </button>
+                </div>
+                
+                <!-- Paginación -->
+                <div class="paginacion-container" id="paginacion-container">
+                    <button class="paginacion-btn" data-page="prev" disabled>
+                        <ion-icon name="chevron-back-outline"></ion-icon>
+                        Anterior
+                    </button>
+                    
+                    <div class="paginas-numeros" id="paginas-numeros">
+                        <!-- Se generará dinámicamente -->
+                    </div>
+                    
+                    <button class="paginacion-btn" data-page="next">
+                        Siguiente
+                        <ion-icon name="chevron-forward-outline"></ion-icon>
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Banner promocional -->
+        <section class="banner-promocional section-container animate-item">
+            <div class="banner-content">
+                <h2>Artesanía de Calidad Superior</h2>
+                <p>Nuestros productos están elaborados con los mejores materiales y técnicas artesanales tradicionales</p>
+                <div class="banner-stats">
+                    <div class="banner-stat">
+                        <div class="stat-number">{{ data.stats.productos }}</div>
+                        <div class="stat-label">Productos</div>
+                    </div>
+                    <div class="banner-stat">
+                        <div class="stat-number">{{ data.stats.clientes }}</div>
+                        <div class="stat-label">Clientes Satisfechos</div>
+                    </div>
+                    <div class="banner-stat">
+                        <div class="stat-number">{{ data.stats.años_experiencia }}</div>
+                        <div class="stat-label">Años de Experiencia</div>
+                    </div>
+                </div>
+            </div>
+            <div class="banner-image skeleton-loading">
+                <img data-src="{{ url_for('public_files', filename='imagenes/banner-artesania.jpg') }}" alt="Artesanía tradicional mexicana" class="lazy-image">
+            </div>
+        </section>
+        
+        <!-- Marcador de Carrito Flotante -->
+        <div class="carrito-flotante" id="carrito-flotante">
+            <a href="{{ url_for('carrito') }}" class="carrito-btn">
+                <ion-icon name="cart-outline"></ion-icon>
+                <span class="carrito-contador" id="carrito-contador">0</span>
+            </a>
+        </div>
+        
+        <!-- Botón de regreso arriba -->
+        <button id="back-to-top" class="back-to-top" aria-label="Volver arriba">
+            <ion-icon name="arrow-up-outline"></ion-icon>
+        </button>
+    </main>
+    
+    <!-- Modal de vista rápida de producto -->
+    <div class="modal-overlay" id="quickview-modal">
+        <div class="modal-container producto-quickview">
+            <div class="modal-header">
+                <h3 id="quickview-titulo">Vista Rápida del Producto</h3>
+                <button class="modal-close">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="quickview-content">
+                    <div class="quickview-imagen skeleton-loading">
+                        <img src="" alt="" id="quickview-imagen" class="lazy-image">
+                    </div>
+                    <div class="quickview-detalles">
+                        <h2 id="quickview-nombre"></h2>
+                        <p class="quickview-categoria" id="quickview-categoria"></p>
+                        
+                        <div class="quickview-precio" id="quickview-precio-container">
+                            <span class="price-normal" id="quickview-precio"></span>
+                        </div>
+                        
+                        <div class="quickview-descripcion">
+                            <p id="quickview-descripcion"></p>
+                        </div>
+                        
+                        <div class="quickview-cantidad">
+                            <span>Cantidad:</span>
+                            <div class="cantidad-control">
+                                <button class="cantidad-btn dec-cantidad">
+                                    <ion-icon name="remove-outline"></ion-icon>
+                                </button>
+                                <input type="number" class="cantidad-input" id="quickview-cantidad" value="1" min="1" max="99">
+                                <button class="cantidad-btn inc-cantidad">
+                                    <ion-icon name="add-outline"></ion-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" id="quickview-ver-mas" class="btn-secondary">
+                    <ion-icon name="eye-outline"></ion-icon>
+                    Ver Más Detalles
+                </a>
+                <button id="quickview-agregar" class="btn-primary" data-product-id="">
+                    <ion-icon name="cart-outline"></ion-icon>
+                    Añadir al Carrito
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Incluir el footer -->
+    {% include 'fijos/footer.html' %}
+</body>
+</html>

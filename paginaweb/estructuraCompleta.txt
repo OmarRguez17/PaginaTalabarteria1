@@ -1,0 +1,34 @@
+sistema_gestion/
+├── app.py                           # Archivo principal de la aplicación
+├── visible/                         # Interfaz web visible al usuario
+│   ├── css/                         # Estilos CSS
+│   │   ├── fijos/                   # Estilos comunes a todas las páginas
+│   │   │   └── base.css             # Estilos base
+│   │   └── home/                    # Estilos específicos de la página de inicio
+│   │       └── home.css             # Estilos de la página de inicio
+│   ├── js/                          # Scripts JavaScript
+│   │   ├── fijos/                   # Scripts comunes a todas las páginas
+│   │   │   └── common.js            # Script común
+│   │   └── home/                    # Scripts específicos de la página de inicio
+│   │       └── home.js              # Script de la página de inicio
+│   └── html/                        # Archivos HTML
+│       ├── fijos/                   # Componentes HTML reutilizables
+│       │   ├── header.html          # Encabezado común
+│       │   └── footer.html          # Pie de página común
+│       └── home/                    # HTML específico de la página de inicio
+│           └── index.html           # Página de inicio
+├── publico/                         # Recursos públicos accesibles directamente
+│   ├── iconos/                      # Iconos del sistema
+│   │   └── favicon.ico              # Icono de la aplicación
+│   └── imagenes/                    # Imágenes de la aplicación
+│       ├── fijos/                   # Imágenes comunes a toda la aplicación
+│       │   └── logo.png             # Logo del sistema
+│       └── home/                    # Imágenes específicas de la página de inicio
+│           └── banner.jpg           # Banner de la página de inicio
+└── backend/                         # Lógica del servidor
+    ├── DB/                          # Base de datos
+    │   └── database.db              # Archivo de base de datos SQLite
+    ├── configuracion/               # Archivos de configuración
+    │   └── config.py                # Configuración de la aplicación
+    └── controladores/               # Archivos Python que envían datos a los HTML
+        └── home_controller.py       # Controlador de la página de inicio

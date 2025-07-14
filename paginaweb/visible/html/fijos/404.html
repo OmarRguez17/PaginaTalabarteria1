@@ -1,0 +1,51 @@
+{% include 'fijos/header.html' %}
+
+<div class="container">
+    <div class="error-page">
+        <div class="error-code">404</div>
+        <h1 class="error-title">Página no encontrada</h1>
+        <p class="error-message">Lo sentimos, la página que estás buscando no existe o ha sido movida.</p>
+        <div class="error-actions">
+            <a href="/" class="btn btn-primary">Volver al inicio</a>
+            <a href="/contacto" class="btn">Contactar soporte</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .error-page {
+        text-align: center;
+        padding: 5rem 0;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .error-code {
+        font-size: 8rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        line-height: 1;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .error-title {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: var(--secondary-color);
+    }
+    
+    .error-message {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 2rem;
+    }
+    
+    .error-actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+</style>
+
+{% include 'fijos/footer.html' %}

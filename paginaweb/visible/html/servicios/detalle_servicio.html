@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data.detalle_servicio.producto.nombre }} - {{ data.company_name }}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}">
+    
+    <!-- Ion Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap">
+    
+    <!-- Estilos base comunes -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fijos/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fijos/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/servicios/detalle_servicio.css') }}">
+    
+    <!-- Scripts comunes -->
+    <script src="{{ url_for('static', filename='js/fijos/header.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/fijos/footer.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/servicios/detalle_servicio.js') }}" defer></script>
+</head>
+<body>
+    
+    <!-- Incluir el header -->
+    {% include 'fijos/header.html' %}
+
+    <!-- Contenedor de notificaciones -->
+    <div class="notification-container"></div>
+    
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <!-- Breadcrumb con botón de regreso -->
+        <section class="breadcrumb-section">
+            <div class="breadcrumb-wrapper">
+                <button class="btn-back" onclick="goBack()">
+                    <ion-icon name="arrow-back-outline"></ion-icon>
+                    Regresar
+                </button>
+                <div class="breadcrumb-container">
+                    <a href="{{ url_for('home') }}">Inicio</a>
+                    <ion-icon name="chevron-forward-outline"></ion-icon>
+                    <a href="{{ url_for('servicios') }}">Productos</a>
+                    <ion-icon name="chevron-forward-outline"></ion-icon>
+                    <span>{{ data.detalle_servicio.producto.nombre }}</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detalle del producto -->
+        <section class="producto-detalle-section">
+            <div class="producto-detalle-container">
+                <!-- Galería de imágenes -->
+                <div class="producto-galeria">
+                    {% if data.detalle_servicio.imagenes %}
+                    <div class="galeria-grande">
+                        <img id="imagen-principal" 
+                             src="{{ data.detalle_servicio.imagenes[0].url_imagen }}" 
+                             alt="{{ data.detalle_servicio.producto.nombre }}" 
+                             class="imagen-principal">
+                    </div>
+                    <div class="galeria-thumbnails">
+                        {% for imagen in data.detalle_servicio.imagenes %}
+                        <div class="thumbnail-item {% if loop.first %}active{% endif %}" 
+                             onclick="cambiarImagenPrincipal('{{ imagen.url_imagen }}', this)">
+                            <img src="{{ imagen.url_imagen }}" alt="{{ data.detalle_servicio.producto.nombre }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="galeria-grande">
+                        <img id="imagen-principal" 
+                             src="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}" 
+                             alt="{{ data.detalle_servicio.producto.nombre }}" 
+                             class="imagen-principal">
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Información del producto -->
+                <div class="producto-info">
+                    <h1>{{ data.detalle_servicio.producto.nombre }}</h1>
+                    <p class="producto-categoria">
+                        Categoría: <a href="{{ url_for('servicios') }}?categoria={{ data.detalle_servicio.producto.categoria_id }}">
+                            {{ data.detalle_servicio.producto.categoria_nombre }}
+                        </a>
+                    </p>
+
+                    <!-- Precio -->
+                    <div class="producto-precio">
+                        {% if data.detalle_servicio.producto.precio_descuento %}
+                        <span class="precio-descuento">${{ data.detalle_servicio.producto.precio_descuento }}</span>
+                        <span class="precio-original">${{ data.detalle_servicio.producto.precio }}</span>
+                        <span class="porcentaje-descuento">{{ data.detalle_servicio.producto.porcentaje_descuento }}% OFF</span>
+                        {% else %}
+                        <span class="precio-normal">${{ data.detalle_servicio.producto.precio }}</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Calificación promedio -->
+                    {% if data.detalle_servicio.resenas %}
+                    <div class="producto-rating">
+                        <div class="estrellas">
+                            {% for i in range(1, 6) %}
+                            <ion-icon name="{% if i <= data.detalle_servicio.promedio_calificacion %}star{% else %}star-outline{% endif %}"></ion-icon>
+                            {% endfor %}
+                        </div>
+                        <span class="rating-text">{{ data.detalle_servicio.promedio_calificacion }} de 5</span>
+                        <span class="reviews-count">({{ data.detalle_servicio.resenas|length }} reseñas)</span>
+                    </div>
+                    {% endif %}
+
+                    <!-- Descripción corta -->
+                    <div class="producto-descripcion">
+                        <p>{{ data.detalle_servicio.producto.descripcion }}</p>
+                    </div>
+
+                    <!-- Detalles del producto -->
+                    <div class="producto-detalles">
+                        {% if data.detalle_servicio.producto.sku %}
+                        <div class="detalle-item">
+                            <span class="detalle-label">SKU:</span>
+                            <span class="detalle-valor">{{ data.detalle_servicio.producto.sku }}</span>
+                        </div>
+                        {% endif %}
+                        {% if data.detalle_servicio.producto.material %}
+                        <div class="detalle-item">
+                            <span class="detalle-label">Material:</span>
+                            <span class="detalle-valor">{{ data.detalle_servicio.producto.material }}</span>
+                        </div>
+                        {% endif %}
+                        {% if data.detalle_servicio.producto.dimensiones %}
+                        <div class="detalle-item">
+                            <span class="detalle-label">Dimensiones:</span>
+                            <span class="detalle-valor">{{ data.detalle_servicio.producto.dimensiones }}</span>
+                        </div>
+                        {% endif %}
+                        {% if data.detalle_servicio.producto.peso %}
+                        <div class="detalle-item">
+                            <span class="detalle-label">Peso:</span>
+                            <span class="detalle-valor">{{ data.detalle_servicio.producto.peso }} kg</span>
+                        </div>
+                        {% endif %}
+                        <div class="detalle-item">
+                            <span class="detalle-label">Disponibilidad:</span>
+                            <span class="detalle-valor {% if data.detalle_servicio.producto.cantidad_stock > 0 %}en-stock{% else %}sin-stock{% endif %}">
+                                {% if data.detalle_servicio.producto.cantidad_stock > 0 %}
+                                    En stock ({{ data.detalle_servicio.producto.cantidad_stock }} unidades)
+                                {% else %}
+                                    Sin stock
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Cantidad y agregar al carrito -->
+                    <div class="producto-comprar">
+                        <div class="cantidad-selector">
+                            <label>Cantidad:</label>
+                            <div class="cantidad-control">
+                                <button class="cantidad-btn" onclick="decrementarCantidad()">
+                                    <ion-icon name="remove-outline"></ion-icon>
+                                </button>
+                                <input type="number" id="cantidad-input" value="1" min="1" max="{{ data.detalle_servicio.producto.cantidad_stock }}">
+                                <button class="cantidad-btn" onclick="incrementarCantidad()">
+                                    <ion-icon name="add-outline"></ion-icon>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button class="btn-primary btn-comprar" id="btn-agregar-carrito" onclick="agregarAlCarrito({{ data.detalle_servicio.producto.id }})"
+                                {% if data.detalle_servicio.producto.cantidad_stock == 0 %}disabled{% endif %}>
+                            <ion-icon name="cart-outline"></ion-icon>
+                            {% if data.detalle_servicio.producto.cantidad_stock > 0 %}
+                                Agregar al Carrito
+                            {% else %}
+                                Sin Stock
+                            {% endif %}
+                        </button>
+                    </div>
+
+                    <!-- Etiquetas -->
+                    {% if data.detalle_servicio.etiquetas %}
+                    <div class="producto-etiquetas">
+                        <span class="etiquetas-label">Etiquetas:</span>
+                        {% for etiqueta in data.detalle_servicio.etiquetas %}
+                        <span class="etiqueta-item">{{ etiqueta.nombre }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Compartir -->
+                    <div class="producto-compartir">
+                        <span>Compartir:</span>
+                        <a href="#" onclick="compartirFacebook()" class="social-link">
+                            <ion-icon name="logo-facebook"></ion-icon>
+                        </a>
+                        <a href="#" onclick="compartirWhatsApp()" class="social-link">
+                            <ion-icon name="logo-whatsapp"></ion-icon>
+                        </a>
+                        <a href="#" onclick="copiarEnlace()" class="social-link">
+                            <ion-icon name="link-outline"></ion-icon>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabs de información adicional -->
+        <section class="info-tabs-section">
+            <div class="tabs-container">
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-tab="descripcion">Descripción</button>
+                    <button class="tab-btn" data-tab="especificaciones">Especificaciones</button>
+                    <button class="tab-btn" data-tab="reseñas">Reseñas ({{ data.detalle_servicio.resenas|length }})</button>
+                </div>
+
+                <div class="tabs-content">
+                    <!-- Tab Descripción -->
+                    <div class="tab-panel active" id="tab-descripcion">
+                        <div class="descripcion-detallada">
+                            {{ data.detalle_servicio.producto.descripcion_detallada|safe }}
+                        </div>
+                    </div>
+
+                    <!-- Tab Especificaciones -->
+                    <div class="tab-panel" id="tab-especificaciones">
+                        <table class="especificaciones-tabla">
+                            <tbody>
+                                {% if data.detalle_servicio.producto.sku %}
+                                <tr>
+                                    <td class="spec-label">SKU</td>
+                                    <td>{{ data.detalle_servicio.producto.sku }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if data.detalle_servicio.producto.material %}
+                                <tr>
+                                    <td class="spec-label">Material</td>
+                                    <td>{{ data.detalle_servicio.producto.material }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if data.detalle_servicio.producto.dimensiones %}
+                                <tr>
+                                    <td class="spec-label">Dimensiones</td>
+                                    <td>{{ data.detalle_servicio.producto.dimensiones }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if data.detalle_servicio.producto.peso %}
+                                <tr>
+                                    <td class="spec-label">Peso</td>
+                                    <td>{{ data.detalle_servicio.producto.peso }} kg</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                    <td class="spec-label">Categoría</td>
+                                    <td>{{ data.detalle_servicio.producto.categoria_nombre }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="spec-label">Stock</td>
+                                    <td>{{ data.detalle_servicio.producto.cantidad_stock }} unidades</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Tab Reseñas -->
+                    <div class="tab-panel" id="tab-reseñas">
+                        {% if data.detalle_servicio.resenas %}
+                        <div class="reseñas-resumen">
+                            <div class="promedio-rating">
+                                <span class="promedio-numero">{{ data.detalle_servicio.promedio_calificacion }}</span>
+                                <div class="promedio-estrellas">
+                                    {% for i in range(1, 6) %}
+                                    <ion-icon name="{% if i <= data.detalle_servicio.promedio_calificacion %}star{% else %}star-outline{% endif %}"></ion-icon>
+                                    {% endfor %}
+                                </div>
+                                <span class="total-reviews">Basado en {{ data.detalle_servicio.resenas|length }} reseñas</span>
+                            </div>
+                        </div>
+
+                        <div class="reseñas-lista">
+                            {% for resena in data.detalle_servicio.resenas %}
+                            <div class="resena-item">
+                                <div class="resena-header">
+                                    <div class="resena-usuario">
+                                        <strong>{{ resena.usuario_nombre }} {{ resena.usuario_apellidos }}</strong>
+                                        {% if resena.es_compra_verificada %}
+                                        <span class="compra-verificada">
+                                            <ion-icon name="checkmark-circle"></ion-icon>
+                                            Compra verificada
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="resena-fecha">
+                                        {{ resena.fecha_publicacion.strftime('%d/%m/%Y') }}
+                                    </div>
+                                </div>
+                                <div class="resena-rating">
+                                    {% for i in range(1, 6) %}
+                                    <ion-icon name="{% if i <= resena.calificacion %}star{% else %}star-outline{% endif %}"></ion-icon>
+                                    {% endfor %}
+                                </div>
+                                {% if resena.titulo %}
+                                <h4 class="resena-titulo">{{ resena.titulo }}</h4>
+                                {% endif %}
+                                <p class="resena-comentario">{{ resena.comentario }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="sin-reseñas">
+                            <p>Aún no hay reseñas para este producto.</p>
+                            <p>¡Sé el primero en compartir tu opinión!</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Productos relacionados -->
+        {% if data.detalle_servicio.productos_relacionados %}
+        <section class="productos-relacionados-section">
+            <h2>Productos Relacionados</h2>
+            <div class="productos-relacionados-grid">
+                {% for producto in data.detalle_servicio.productos_relacionados %}
+                <div class="producto-card">
+                    {% if producto.destacado %}
+                    <div class="producto-badge">Destacado</div>
+                    {% endif %}
+                    {% if producto.nuevo %}
+                    <div class="producto-badge new-badge">Nuevo</div>
+                    {% endif %}
+                    <div class="producto-imagen">
+                        <a href="{{ url_for('detalle_servicio', servicio_id=producto.id) }}">
+                            {% if producto.imagen_principal %}
+                            <img src="{{ producto.imagen_principal }}" alt="{{ producto.nombre }}">
+                            {% else %}
+                            <img src="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}" alt="{{ producto.nombre }}">
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div class="producto-content">
+                        <h3>
+                            <a href="{{ url_for('detalle_servicio', servicio_id=producto.id) }}">
+                                {{ producto.nombre }}
+                            </a>
+                        </h3>
+                        <p class="producto-categoria">{{ producto.categoria_nombre }}</p>
+                        <div class="producto-precio">
+                            {% if producto.precio_descuento %}
+                            <span class="price-discount">${{ producto.precio_descuento }}</span>
+                            <span class="price-original">${{ producto.precio }}</span>
+                            <span class="discount-badge">{{ producto.porcentaje_descuento }}% OFF</span>
+                            {% else %}
+                            <span class="price-normal">${{ producto.precio }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="producto-actions">
+                            <a href="{{ url_for('detalle_servicio', servicio_id=producto.id) }}" class="btn-secondary btn-view">
+                                <ion-icon name="eye-outline"></ion-icon>
+                                Ver Detalles
+                            </a>
+                            <button class="btn-primary btn-add-cart" data-product-id="{{ producto.id }}">
+                                <ion-icon name="cart-outline"></ion-icon>
+                                Añadir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- Botón de regreso arriba -->
+        <button id="back-to-top" class="back-to-top" aria-label="Volver arriba">
+            <ion-icon name="arrow-up-outline"></ion-icon>
+        </button>
+    </main>
+    
+    <!-- Incluir el footer -->
+    {% include 'fijos/footer.html' %}
+
+    <!-- Modal de imagen ampliada -->
+    <div class="modal-overlay" id="imagen-modal">
+        <div class="modal-imagen-container">
+            <button class="modal-close" onclick="cerrarModalImagen()">
+                <ion-icon name="close-outline"></ion-icon>
+            </button>
+            <img id="imagen-modal-content" src="" alt="">
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!-- Header mejorado con efectos visuales -->
+<header>
+    <div class="container">
+        <div class="header-content">
+            <!-- Logo -->
+            <div class="logo">
+                <div class="logo-img-container">
+                    <img src="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}" alt="{{ data.app_name }}">
+                </div>
+                <div class="logo-text">
+                    <h1>{{ data.app_name }}</h1>
+                </div>
+            </div>
+            
+            <!-- Navegación principal con efectos mejorados - Solo visible en pantallas grandes -->
+            <nav id="mainNav">
+                <ul id="mainMenu">
+                    <li>
+                        <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">
+                            <ion-icon name="home-outline"></ion-icon>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/servicios" class="nav-link {% if request.path == '/servicios' %}active{% endif %}">
+                            <ion-icon name="construct-outline"></ion-icon>
+                            <span>Servicios</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/carrito" class="nav-link {% if request.path == '/carrito' %}active{% endif %}">
+                            <div class="cart-icon-container">
+                                <ion-icon name="cart-outline"></ion-icon>
+                                {% if session.cart and session.cart|length > 0 %}
+                                <span class="cart-badge">{{ session.cart|length }}</span>
+                                {% endif %}
+                            </div>
+                            <span>Carrito</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <!-- Acciones de usuario para el menú móvil - Solo visible en pantallas pequeñas -->
+                <div class="user-actions-mobile">
+                    {% if not session.usuario %}
+                    <!-- Mostrar solo si NO hay sesión de usuario -->
+                    <a href="/login" class="user-action login-link">
+                        <div class="action-icon">
+                            <ion-icon name="log-in-outline"></ion-icon>
+                        </div>
+                        <span class="action-text">Iniciar Sesión</span>
+                    </a>
+                    <a href="/registro" class="user-action register-link">
+                        <div class="action-icon">
+                            <ion-icon name="person-add-outline"></ion-icon>
+                        </div>
+                        <span class="action-text">Registrarse</span>
+                    </a>
+                    {% else %}
+                    <!-- Mostrar solo si hay sesión de usuario -->
+                    <div class="user-welcome">
+                        <div class="user-avatar">
+                            <ion-icon name="person-circle-outline"></ion-icon>
+                        </div>
+                        <span class="action-text">Hola, {{ session.usuario.nombre }}</span>
+                    </div>
+                    <a href="/logout" class="user-action logout-link">
+                        <div class="action-icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </div>
+                        <span class="action-text">Salir</span>
+                    </a>
+                    {% endif %}
+                </div>
+            </nav>
+            
+            <!-- Acciones de usuario con nuevo diseño (solo visibles en pantalla grande) -->
+            <div class="user-actions">
+                {% if not session.usuario %}
+                <!-- Mostrar solo si NO hay sesión de usuario -->
+                <a href="/login" class="user-action login-link">
+                    <div class="action-icon">
+                        <ion-icon name="log-in-outline"></ion-icon>
+                    </div>
+                    <span class="action-text">Iniciar Sesión</span>
+                </a>
+                <a href="/registro" class="user-action register-link">
+                    <div class="action-icon">
+                        <ion-icon name="person-add-outline"></ion-icon>
+                    </div>
+                    <span class="action-text">Registrarse</span>
+                </a>
+                {% else %}
+                <!-- Mostrar solo si hay sesión de usuario -->
+                <div class="user-welcome">
+                    <div class="user-avatar">
+                        <ion-icon name="person-circle-outline"></ion-icon>
+                    </div>
+                    <span class="action-text">Hola, {{ session.usuario.nombre }}</span>
+                </div>
+                <a href="/logout" class="user-action logout-link">
+                    <div class="action-icon">
+                        <ion-icon name="log-out-outline"></ion-icon>
+                    </div>
+                    <span class="action-text">Salir</span>
+                </a>
+                {% endif %}
+            </div>
+            
+            <!-- Botón de menú móvil con animación -->
+            <button class="mobile-menu-toggle" aria-label="Menú" id="menuToggle">
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Overlay para cuando el menú móvil está activo -->
+<div class="menu-overlay" id="menuOverlay"></div>
+
+<!-- Contenedor de notificaciones mejorado -->
+<div class="notification-container"></div>

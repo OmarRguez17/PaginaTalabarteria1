@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data.app_name }} - Iniciar Sesión</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}">
+    <!-- Ion Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap">
+    <!-- Estilos base comunes -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fijos/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fijos/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login/login.css') }}">
+    <!-- Scripts comunes -->
+    <script src="{{ url_for('static', filename='js/fijos/header.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/fijos/footer.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/login/login.js') }}" defer></script>
+</head>
+<body>
+    <!-- Incluir el header -->
+    {% include 'fijos/header.html' %}
+    <!-- Contenedor de notificaciones -->
+    <div class="notification-container"></div>
+    <!-- Indicador de carga principal -->
+    <div class="page-loader">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+    </div>
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <div class="login-container">
+            <div class="login-left-panel">
+                <div class="login-hero-content">
+                    <div class="login-logo">
+                        <img src="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}" alt="{{ data.app_name }}">
+                    </div>
+                    <h1>¡Bienvenido de nuevo!</h1>
+                    <p>Inicia sesión para acceder a tu cuenta, revisar tus pedidos y disfrutar de todos los beneficios como cliente de Talabartería Rodríguez.</p>
+                    <div class="login-features">
+                        <div class="login-feature">
+                            <ion-icon name="bag-check-outline"></ion-icon>
+                            <span>Revisa tus pedidos</span>
+                        </div>
+                        <div class="login-feature">
+                            <ion-icon name="heart-outline"></ion-icon>
+                            <span>Guarda tus favoritos</span>
+                        </div>
+                        <div class="login-feature">
+                            <ion-icon name="timer-outline"></ion-icon>
+                            <span>Compra más rápido</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="login-right-panel">
+                <div class="login-form-container">
+                    <div class="login-tabs">
+                        <button class="login-tab-btn active" data-tab="login">Iniciar Sesión</button>
+                        <button class="login-tab-btn" data-tab="register">Registrarse</button>
+                    </div>
+                    <div class="login-tab-content active" id="login-tab">
+                        <h2>Iniciar Sesión</h2>
+                        <p>Ingresa tus credenciales para acceder a tu cuenta</p>
+                        <!-- Alerta de mensajes (inicialmente oculta o visible según data) -->
+                        <div class="login-alert {{ 'show' if data.message else '' }}" {% if data.message %}style="display: flex;"{% else %}style="display: none;"{% endif %}>                            
+                            <ion-icon name="alert-circle-outline"></ion-icon>
+                            <span class="login-alert-message">{{ data.message }}</span>
+                            <button class="login-alert-close">
+                                <ion-icon name="close-outline"></ion-icon>
+                            </button>
+                        </div>
+                        <form id="login-form" class="login-form" method="post" action="{{ url_for('login_post') }}">
+                            <div class="form-field">
+                                <label for="login-email">Correo electrónico</label>
+                                <div class="input-icon-wrapper">
+                                    <ion-icon name="mail-outline"></ion-icon>
+                                    <input type="email" id="login-email" name="email" placeholder="Tu correo electrónico" value="" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-field">
+                                <label for="login-password">Contraseña</label>
+                                <div class="input-icon-wrapper">
+                                    <ion-icon name="lock-closed-outline"></ion-icon>
+                                    <input type="password" id="login-password" name="password" placeholder="Tu contraseña" value="" required>
+                                    <button type="button" class="password-toggle">
+                                        <ion-icon name="eye-outline" class="show-password"></ion-icon>
+                                        <ion-icon name="eye-off-outline" class="hide-password" style="display: none;"></ion-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-options">
+                                <div class="remember-me">
+                                    <input type="checkbox" id="remember" name="remember">
+                                    <label for="remember">Recordarme</label>
+                                </div>
+                                <a href="#" class="forgot-password" id="forgot-password-link">¿Olvidaste tu contraseña?</a>
+                            </div>
+                            
+                            <button type="submit" class="btn-primary btn-login">
+                                <ion-icon name="log-in-outline"></ion-icon>
+                                Iniciar Sesión
+                            </button>
+                        </form>
+                        {% if data.social_login_enabled %}
+                        <div class="social-login">
+                            <p>O inicia sesión con:</p>
+                            <div class="social-buttons">
+                                <button class="btn-social btn-google">
+                                    <ion-icon name="logo-google"></ion-icon>
+                                    Google
+                                </button>
+                                <button class="btn-social btn-facebook">
+                                    <ion-icon name="logo-facebook"></ion-icon>
+                                    Facebook
+                                </button>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="login-tab-content" id="register-tab">
+                        <h2>Crear una cuenta</h2>
+                        <p>Completa el formulario para unirte a Talabartería Rodríguez</p>
+                        
+                        <!-- Alerta de mensajes (inicialmente oculta) -->
+                        <div class="login-alert" style="display: none;">
+                            <ion-icon name="alert-circle-outline"></ion-icon>
+                            <span class="login-alert-message"></span>
+                            <button class="login-alert-close">
+                                <ion-icon name="close-outline"></ion-icon>
+                            </button>
+                        </div>
+                        <!-- Cambiado de 'register_post' a 'registro_create_temp_user' -->
+                        <form id="register-form" class="login-form" method="post" action="{{ url_for('registro_create_temp_user') }}">
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label for="register-nombre">Nombre</label>
+                                    <div class="input-icon-wrapper">
+                                        <ion-icon name="person-outline"></ion-icon>
+                                        <input type="text" id="register-nombre" name="nombre" placeholder="Tu nombre" required>
+                                    </div>
+                                </div>
+                                <div class="form-field">
+                                    <label for="register-apellidos">Apellidos</label>
+                                    <div class="input-icon-wrapper">
+                                        <ion-icon name="person-outline"></ion-icon>
+                                        <input type="text" id="register-apellidos" name="apellidos" placeholder="Tus apellidos" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label for="register-email">Correo electrónico</label>
+                                <div class="input-icon-wrapper">
+                                    <ion-icon name="mail-outline"></ion-icon>
+                                    <input type="email" id="register-email" name="email" placeholder="Tu correo electrónico" required>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label for="register-telefono">Teléfono (opcional)</label>
+                                <div class="input-icon-wrapper">
+                                    <ion-icon name="call-outline"></ion-icon>
+                                    <input type="tel" id="register-telefono" name="telefono" placeholder="Tu número de teléfono">
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label for="register-password">Contraseña</label>
+                                <div class="input-icon-wrapper">
+                                    <ion-icon name="lock-closed-outline"></ion-icon>
+                                    <input type="password" id="register-password" name="password" placeholder="Crea una contraseña" required>
+                                    <button type="button" class="password-toggle">
+                                        <ion-icon name="eye-outline" class="show-password"></ion-icon>
+                                        <ion-icon name="eye-off-outline" class="hide-password" style="display: none;"></ion-icon>
+                                    </button>
+                                </div>
+                                <div class="password-requirements">
+                                    <p>La contraseña debe tener:</p>
+                                    <ul>
+                                        <li data-requirement="length">Al menos 8 caracteres</li>
+                                        <li data-requirement="uppercase">Al menos una mayúscula</li>
+                                        <li data-requirement="lowercase">Al menos una minúscula</li>
+                                        <li data-requirement="number">Al menos un número</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label for="register-confirm-password">Confirmar contraseña</label>
+                                <div class="input-icon-wrapper">
+                                    <ion-icon name="lock-closed-outline"></ion-icon>
+                                    <input type="password" id="register-confirm-password" name="confirm_password" placeholder="Repite tu contraseña" required>
+                                </div>
+                            </div>
+                            <div class="form-options">
+                                <div class="terms-agree">
+                                    <input type="checkbox" id="terms" name="terms" required>
+                                    <label for="terms">Acepto los <a href="#" target="_blank">Términos y Condiciones</a> y la <a href="#" target="_blank">Política de Privacidad</a></label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary btn-register">
+                                <ion-icon name="person-add-outline"></ion-icon>
+                                Crear Cuenta
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Sección de contraseña olvidada (inicialmente oculta) -->
+                    <div class="login-tab-content" id="forgot-password-tab">
+                        <h2>Recuperar Contraseña</h2>
+                        <p>Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña</p>
+                        
+                        <!-- Alerta de mensajes (inicialmente oculta) -->
+                        <div class="login-alert" style="display: none;">
+                            <ion-icon name="alert-circle-outline"></ion-icon>
+                            <span class="login-alert-message"></span>
+                            <button class="login-alert-close">
+                                <ion-icon name="close-outline"></ion-icon>
+                            </button>
+                        </div>
+                        
+                        <form id="forgot-password-form" class="login-form" method="post" action="{{ url_for('forgot_password_post') }}">
+                            <div class="form-field">
+                                <label for="forgot-email">Correo electrónico</label>
+                                <div class="input-icon-wrapper">
+                                    <ion-icon name="mail-outline"></ion-icon>
+                                    <input type="email" id="forgot-email" name="email" placeholder="Tu correo electrónico" required>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn-primary btn-reset">
+                                <ion-icon name="send-outline"></ion-icon>
+                                Enviar Enlace
+                            </button>
+                            
+                            <button type="button" class="btn-link back-to-login">
+                                <ion-icon name="arrow-back-outline"></ion-icon>
+                                Volver a Iniciar Sesión
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Incluir el footer -->
+    {% include 'fijos/footer.html' %}
+    
+    <!-- Efecto de fondo -->
+    <div class="background-effect"></div>
+</body>
+</html>

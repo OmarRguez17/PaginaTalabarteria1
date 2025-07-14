@@ -1,0 +1,705 @@
+
+/* Estilos para la página de registro - registro.css */
+
+/* ----- ESTILOS GENERALES ----- */
+.main-content {
+    padding: 0;
+    width: 100%;
+    overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5% 0;
+    background-color: #FAF8F1; /* Blanco Hueso */
+}
+
+/* ----- ANIMACIONES Y ESQUELETOS DE CARGA ----- */
+.page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #FAF8F1; /* Blanco Hueso */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.page-loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.spinner {
+    width: 4em;
+    height: 4em;
+    border: 0.3em solid #E8D4B9; /* Beige Cuero */
+    border-top: 0.3em solid #8B572A; /* Café Mezclilla */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1em;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ----- CONTENEDOR PRINCIPAL DE REGISTRO ----- */
+.registro-container {
+    width: 90%;
+    max-width: 800px;
+    background-color: #ffffff;
+    border-radius: 1em;
+    overflow: hidden;
+    box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.1);
+    margin: 3% auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ----- PASOS DE REGISTRO ----- */
+.registro-steps-container {
+    background-color: #8B572A; /* Café Mezclilla */
+    padding: 1.5em;
+    color: #FAF8F1; /* Blanco Hueso */
+}
+
+.registro-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5em;
+}
+
+.registro-step {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    width: 30%;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.registro-step.active {
+    opacity: 1;
+}
+
+.step-number {
+    width: 2.5em;
+    height: 2.5em;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1em;
+    flex-shrink: 0;
+}
+
+.registro-step.active .step-number {
+    background-color: #E27D60; /* Terracota */
+    color: #FAF8F1; /* Blanco Hueso */
+}
+
+.step-content h3 {
+    font-size: 1em;
+    margin-bottom: 0.2em;
+    font-weight: 600;
+}
+
+.step-content p {
+    font-size: 0.8em;
+    margin: 0;
+    opacity: 0.8;
+}
+
+.registro-progress {
+    margin-top: 0.5em;
+}
+
+.progress-bar {
+    height: 0.5em;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 0.25em;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #E27D60; /* Terracota */
+    border-radius: 0.25em;
+    transition: width 0.5s ease;
+}
+
+/* ----- CONTENIDO DEL FORMULARIO ----- */
+.registro-content {
+    padding: 2em;
+}
+
+.registro-form-container {
+    max-width: 100%;
+}
+
+.registro-header {
+    text-align: center;
+    margin-bottom: 1.5em;
+}
+
+.registro-logo {
+    margin-bottom: 1em;
+}
+
+.registro-logo img {
+    height: 4em;
+    width: auto;
+}
+
+.registro-header h1 {
+    font-size: 2em;
+    color: #8B572A; /* Café Mezclilla */
+    margin-bottom: 0.5em;
+    font-family: 'Playfair Display', serif;
+}
+
+.registro-header p {
+    color: #6D6875; /* Gris Piedra */
+    font-size: 1em;
+}
+
+/* ----- FORMULARIOS ----- */
+.registro-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+}
+
+.form-row {
+    display: flex;
+    gap: 5%;
+}
+
+.form-field {
+    width: 100%;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 0.5em;
+    color: #231F20; /* Negro Mezcal */
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.input-icon-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.input-icon-wrapper ion-icon {
+    position: absolute;
+    left: 1em;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #8B572A; /* Café Mezclilla */
+    font-size: 1.2em;
+}
+
+.input-icon-wrapper input {
+    width: 100%;
+    padding: 1em 1em 1em 3em;
+    border: 1px solid #D4B483; /* Arena Dorada */
+    border-radius: 0.5em;
+    font-size: 1em;
+    color: #231F20; /* Negro Mezcal */
+    transition: all 0.3s ease;
+}
+
+.input-icon-wrapper input:focus {
+    outline: none;
+    border-color: #8B572A; /* Café Mezclilla */
+    box-shadow: 0 0 0 3px rgba(139, 87, 42, 0.1);
+}
+
+.password-toggle {
+    position: absolute;
+    right: 1em;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6D6875; /* Gris Piedra */
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.2em;
+}
+
+.password-toggle:hover {
+    color: #8B572A; /* Café Mezclilla */
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1em;
+    margin-bottom: 5%;
+}
+
+.terms-agree {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.terms-agree input[type="checkbox"] {
+    width: 1.2em;
+    height: 1.2em;
+    accent-color: #8B572A; /* Café Mezclilla */
+}
+
+.terms-agree label {
+    color: #6D6875; /* Gris Piedra */
+    font-size: 0.9em;
+}
+
+.terms-agree a {
+    color: #1A759F; /* Azul Índigo */
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.terms-agree a:hover {
+    color: #E27D60; /* Terracota */
+    text-decoration: underline;
+}
+
+/* ----- REQUISITOS DE CONTRASEÑA ----- */
+.password-requirements {
+    background-color: #f9f9f9;
+    padding: 1em;
+    border-radius: 0.5em;
+    margin-top: 0.5em;
+    font-size: 0.85em;
+}
+
+.password-requirements p {
+    margin-bottom: 0.5em;
+    color: #231F20; /* Negro Mezcal */
+    font-weight: 500;
+}
+
+.password-requirements ul {
+    list-style-type: none;
+    padding-left: 0.5em;
+    margin: 0;
+}
+
+.password-requirements li {
+    position: relative;
+    padding-left: 1.5em;
+    margin-bottom: 0.3em;
+    color: #6D6875; /* Gris Piedra */
+}
+
+.password-requirements li::before {
+    content: "✕";
+    position: absolute;
+    left: 0;
+    color: #9B2226; /* Rojo Artesanal */
+}
+
+.password-requirements li.valid::before {
+    content: "✓";
+    color: #4F7942; /* Verde Agave */
+}
+
+/* ----- BOTONES ----- */
+.form-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    background-color: #E27D60; /* Terracota */
+    color: #FAF8F1; /* Blanco Hueso */
+    padding: 1em 2em;
+    border-radius: 0.5em;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    text-align: center;
+    box-shadow: 0 0.3em 0.8em rgba(226, 125, 96, 0.3);
+    width: 100%;
+    font-family: 'Rubik', sans-serif;
+}
+
+.btn-primary:hover {
+    background-color: #c05a3e; /* Terracota oscuro */
+    transform: translateY(-0.2em);
+    box-shadow: 0 0.5em 1em rgba(226, 125, 96, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(-0.1em);
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    background-color: transparent;
+    color: #8B572A; /* Café Mezclilla */
+    padding: 1em 2em;
+    border-radius: 0.5em;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 0.15em solid #8B572A; /* Café Mezclilla */
+    cursor: pointer;
+    font-size: 1em;
+    text-align: center;
+    width: 100%;
+    font-family: 'Rubik', sans-serif;
+}
+
+.btn-secondary:hover {
+    background-color: #8B572A; /* Café Mezclilla */
+    color: #FAF8F1; /* Blanco Hueso */
+    transform: translateY(-0.2em);
+    box-shadow: 0 0.5em 1em rgba(139, 87, 42, 0.3);
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #8B572A; /* Café Mezclilla */
+    padding: 0.8em;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.95em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    transition: color 0.2s ease;
+    font-family: 'Rubik', sans-serif;
+}
+
+.btn-link:hover {
+    color: #E27D60; /* Terracota */
+}
+
+.btn-link:disabled {
+    color: #6D6875; /* Gris Piedra */
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ----- ALERTA DE MENSAJES ----- */
+.registro-alert {
+    background-color: #FFF3CD; /* Amarillo claro */
+    border-left: 4px solid #FFC107; /* Amarillo */
+    color: #856404; /* Texto amarillo oscuro */
+    padding: 1em;
+    border-radius: 0.5em;
+    margin-bottom: 1.5em;
+    display: flex;
+    align-items: flex-start;
+}
+
+.registro-alert ion-icon {
+    font-size: 1.5em;
+    margin-right: 0.5em;
+    flex-shrink: 0;
+}
+
+.registro-alert-message {
+    flex: 1;
+    font-size: 0.95em;
+}
+
+.registro-alert-close {
+    background: none;
+    border: none;
+    color: #856404; /* Texto amarillo oscuro */
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.2em;
+    margin-left: 0.5em;
+}
+
+.registro-alert.error {
+    background-color: #F8D7DA; /* Rojo claro */
+    border-left-color: #9B2226; /* Rojo Artesanal */
+    color: #721C24; /* Texto rojo oscuro */
+}
+
+.registro-alert.success {
+    background-color: #D4EDDA; /* Verde claro */
+    border-left-color: #4F7942; /* Verde Agave */
+    color: #155724; /* Texto verde oscuro */
+}
+
+/* ----- VERIFICACIÓN DE CÓDIGO ----- */
+.verification-code-container {
+    margin: 1em 0 2em;
+    text-align: center;
+}
+
+.verification-code-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 3%;
+    margin-bottom: 1em;
+}
+
+.verification-input {
+    width: 3em;
+    height: 4em;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: 600;
+    border: 1px solid #D4B483; /* Arena Dorada */
+    border-radius: 0.5em;
+    background-color: #ffffff;
+    color: #231F20; /* Negro Mezcal */
+    transition: all 0.3s ease;
+}
+
+.verification-input:focus {
+    outline: none;
+    border-color: #8B572A; /* Café Mezclilla */
+    box-shadow: 0 0 0 3px rgba(139, 87, 42, 0.1);
+}
+
+.verification-info {
+    margin: 1em 0;
+}
+
+.verification-info p {
+    color: #6D6875; /* Gris Piedra */
+    font-size: 0.95em;
+}
+
+.verification-timer {
+    text-align: center;
+    margin-bottom: 1em;
+    color: #6D6875; /* Gris Piedra */
+    font-size: 0.95em;
+}
+
+.verification-timer #timer {
+    font-weight: 600;
+    color: #8B572A; /* Café Mezclilla */
+}
+
+/* ----- REGISTRO COMPLETADO ----- */
+.registro-success {
+    text-align: center;
+    padding: 2em 1em;
+}
+
+
+.success-icon {
+    font-size: 5em;
+    color: #4F7942; /* Verde Agave */
+    margin-bottom: 0.5em;
+}
+
+.success-icon ion-icon {
+    filter: drop-shadow(0 0.1em 0.2em rgba(79, 121, 66, 0.3));
+}
+
+.registro-success h1 {
+    font-size: 2em;
+    color: #8B572A; /* Café Mezclilla */
+    margin-bottom: 0.5em;
+    font-family: 'Playfair Display', serif;
+}
+
+.registro-success p {
+    color: #6D6875; /* Gris Piedra */
+    margin-bottom: 2em;
+    font-size: 1.1em;
+}
+
+.success-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    max-width: 20em;
+    margin: 0 auto;
+}
+
+/* ----- NOTIFICACIONES ----- */
+.notification-container {
+    position: fixed;
+    top: 5%;
+    right: 5%;
+    z-index: 1000;
+    width: 20em;
+}
+
+.notification {
+    background-color: white;
+    border-radius: 0.5em;
+    padding: 1em;
+    margin-bottom: 0.8em;
+    box-shadow: 0 0.3em 1em rgba(0, 0, 0, 0.1);
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: flex-start;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    border-left: 0.25em solid #4F7942; /* Verde Agave */
+}
+
+.notification.error {
+    border-left: 0.25em solid #9B2226; /* Rojo Artesanal */
+}
+
+.notification.info {
+    border-left: 0.25em solid #1A759F; /* Azul Índigo */
+}
+
+.notification-icon {
+    margin-right: 5%;
+    font-size: 1.5em;
+}
+
+.notification.success .notification-icon {
+    color: #4F7942; /* Verde Agave */
+}
+
+.notification.error .notification-icon {
+    color: #9B2226; /* Rojo Artesanal */
+}
+
+.notification.info .notification-icon {
+    color: #1A759F; /* Azul Índigo */
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-title {
+    font-weight: 600;
+    margin-bottom: 2%;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+    color: #6D6875; /* Gris Piedra */
+    padding: 0;
+    margin-left: 3%;
+}
+
+.notification-close:hover {
+    opacity: 1;
+}
+
+/* ----- EFECTOS DE FONDO ----- */
+.background-effect {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    background: linear-gradient(135deg, rgba(232, 212, 185, 0.05) 0%, rgba(139, 87, 42, 0.05) 100%);
+}
+
+/* ----- VALIDACIÓN DE FORMULARIO ----- */
+.input-error {
+    border-color: #9B2226 !important; /* Rojo Artesanal */
+}
+
+.error-message {
+    color: #9B2226; /* Rojo Artesanal */
+    font-size: 0.85em;
+    margin-top: 0.3em;
+}
+
+/* ----- RESPONSIVE DESIGN ----- */
+@media (max-width: 768px) {
+    .registro-container {
+        width: 95%;
+    }
+    
+    .registro-steps {
+        flex-direction: column;
+        gap: 1em;
+        margin-bottom: 1em;
+    }
+    
+    .registro-step {
+        width: 100%;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 1.5em;
+    }
+    
+    .verification-code-inputs {
+        gap: 2%;
+    }
+    
+    .verification-input {
+        width: 2.5em;
+        height: 3.5em;
+        font-size: 1.3em;
+    }
+}
+
+@media (max-width: 480px) {
+    .registro-container {
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh;
+    }
+    
+    .registro-content {
+        padding: 1.5em 1em;
+    }
+    
+    .verification-code-inputs {
+        gap: 1%;
+    }
+    
+    .verification-input {
+        width: 2.2em;
+        height: 3.2em;
+        font-size: 1.2em;
+    }
+}

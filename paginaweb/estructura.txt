@@ -1,0 +1,71 @@
+sistema_gestion/
+├── app.py                           # Archivo principal de la aplicación
+├── requirements.txt                 # Dependencias del proyecto
+├── visible/                         # Interfaz web visible al usuario
+│   ├── css/                         # Estilos CSS
+│   │   ├── fijos/                   # Estilos comunes a todas las páginas
+│   │   │   ├── header.css           # Estilos del encabezado
+│   │   │   └── footer.css           # Estilos del pie de página
+│   │   ├── home/                    # Estilos específicos de la página de inicio
+│   │   │   └── home.css             # Estilos de la página de inicio
+│   │   ├── servicios/               # Estilos para sección de servicios/productos
+│   │   │   └── servicios.css        # Estilos de la página de servicios
+│   │   ├── carro/                   # Estilos para el carrito de compras
+│   │   │   └── carro.css            # Estilos del carrito
+│   │   ├── login/                   # Estilos para la página de login
+│   │   │   └── login.css            # Estilos de login
+│   │   └── registro/                # Estilos para la página de registro
+│   │       └── registro.css         # Estilos de registro
+│   ├── js/                          # Scripts JavaScript
+│   │   ├── fijos/                   # Scripts comunes a todas las páginas
+│   │   │   ├── header.js            # Script del encabezado
+│   │   │   └── footer.js            # Script del pie de página
+│   │   ├── home/                    # Scripts específicos de la página de inicio
+│   │   │   └── home.js              # Script de la página de inicio
+│   │   ├── servicios/               # Scripts para sección de servicios/productos
+│   │   │   ├── servicios.js         # Script principal de servicios
+│   │   ├── carro/                   # Scripts para el carrito de compras
+│   │   │   └── carro.js             # Script del carrito
+│   │   ├── login/                   # Scripts para la página de login
+│   │   │   └── login.js             # Script de login
+│   │   └── registro/                # Scripts para la página de registro
+│   │       └── registro.js          # Script de registro
+│   └── html/                        # Archivos HTML
+│       ├── fijos/                   # Componentes HTML reutilizables
+│       │   ├── header.html          # Encabezado común
+│       │   ├── footer.html          # Pie de página común
+│       │   └── 404.html             # Página de error 404
+│       ├── home/                    # HTML específico de la página de inicio
+│       │   └── index.html           # Página de inicio
+│       ├── servicios/               # HTML para sección de servicios/productos
+│       │   ├── servicios.html       # Listado de servicios/productos
+│       ├── carro/                   # HTML para el carrito de compras
+│       │   └── carro.html           # Página de carrito
+│       ├── login/                   # HTML para la página de login
+│       │   ├── login.html           # Página de login
+│       └── registro/                # HTML para la página de registro
+│           └── registro.html        # Página de registro
+├── publico/                         # Recursos públicos accesibles directamente
+│   ├── iconos/                      # Iconos del sistema
+│   │   └── favicon.ico              # Icono de la aplicación
+│   └── imagenes/                    # Imágenes de la aplicación
+│       ├── fijos/                   # Imágenes comunes a toda la aplicación
+│       │   └── logo.png             # Logo del sistema
+│       ├── home/                    # Imágenes específicas de la página de inicio
+│       │   └── banner.jpg           # Banner de la página de inicio
+│       └── banners/                 # Banners para diferentes secciones
+│           ├── servicios.jpg        # Banner de la sección de servicios
+│           └── registro.jpg         # Banner de la sección de registro
+└── backend/                         # Lógica del servidor
+    ├── DB/                          # Base de datos
+    │   ├── db_manager.py            # Gestor de conexiones a MySQL
+    │   ├── tablas.sql              # Estructura de la base de datos
+    │   └── insertar.sql             # Datos iniciales
+    ├── configuracion/               # Archivos de configuración
+    │   └── config.py                # Configuración de la aplicación
+    └── controladores/               # Archivos Python que envían datos a los HTML
+        ├── home_controller.py       # Controlador de la página de inicio
+        ├── servicios_controller.py  # Controlador de servicios/productos
+        ├── carro_controller.py      # Controlador del carrito de compras
+        ├── login_controller.py      # Controlador de login/autenticación
+        └── registro_controller.py   # Controlador de registro de usuarios

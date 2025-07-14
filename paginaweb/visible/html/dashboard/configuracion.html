@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data.app_name }} - Configuración</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}">
+    <!-- Ion Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap">
+    <!-- Estilos -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard/configuracion.css') }}">
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/dashboard/configuracion.js') }}" defer></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="{{ url_for('public_files', filename='imagenes/fijos/logo.png') }}" alt="Logo">
+            </div>
+            
+            <nav class="admin-nav">
+                <ul>
+                    <li>
+                        <a href="{{ url_for('dashboard') }}">
+                            <ion-icon name="grid-outline"></ion-icon>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('dashboard_productos') }}">
+                            <ion-icon name="bag-handle-outline"></ion-icon>
+                            <span>Productos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('dashboard_categorias') }}">
+                            <ion-icon name="folder-outline"></ion-icon>
+                            <span>Categorías</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('dashboard_configuracion') }}" class="active">
+                            <ion-icon name="settings-outline"></ion-icon>
+                            <span>Configuración</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="admin-content">
+            <!-- HEADER -->
+            <header class="admin-header">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </button>
+                
+                <h1 class="admin-title">Configuración de la Tienda</h1>
+                
+                <div class="admin-user">
+                    <div class="admin-user-avatar">
+                        <ion-icon name="person"></ion-icon>
+                    </div>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle" onclick="toggleDropdown(this)">
+                            <ion-icon name="ellipsis-vertical"></ion-icon>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="{{ url_for('dashboard') }}" class="dropdown-item">
+                                <ion-icon name="home-outline"></ion-icon>
+                                Dashboard Cliente
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <ion-icon name="person-outline"></ion-icon>
+                                Mi Perfil
+                            </a>
+                            <a href="{{ url_for('logout') }}" class="dropdown-item">
+                                <ion-icon name="log-out-outline"></ion-icon>
+                                Cerrar Sesión
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- TABS DE CONFIGURACIÓN -->
+            <div class="config-tabs">
+                <button class="tab-button active" data-tab="general" onclick="switchTab('general')">
+                    <ion-icon name="business-outline"></ion-icon>
+                    <span>General</span>
+                </button>
+                <button class="tab-button" data-tab="contacto" onclick="switchTab('contacto')">
+                    <ion-icon name="call-outline"></ion-icon>
+                    <span>Contacto</span>
+                </button>
+                <button class="tab-button" data-tab="redes" onclick="switchTab('redes')">
+                    <ion-icon name="share-social-outline"></ion-icon>
+                    <span>Redes Sociales</span>
+                </button>
+                <button class="tab-button" data-tab="imagenes" onclick="switchTab('imagenes')">
+                    <ion-icon name="image-outline"></ion-icon>
+                    <span>Imágenes</span>
+                </button>
+            </div>
+            
+            <!-- CONTENIDO DE TABS -->
+            <form id="configForm">
+                <!-- TAB GENERAL -->
+                <div id="general-tab" class="tab-content active">
+                    <div class="config-section">
+                        <h2 class="section-title">
+                            <ion-icon name="information-circle-outline"></ion-icon>
+                            Información General
+                        </h2>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="nombre">Nombre de la Tienda *</label>
+                                <input type="text" id="nombre" name="nombre" value="{{ data.tienda_info.nombre }}" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="slogan">Slogan</label>
+                                <input type="text" id="slogan" name="slogan" value="{{ data.tienda_info.slogan }}" placeholder="El lema de tu tienda">
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="descripcion">Descripción</label>
+                                <textarea id="descripcion" name="descripcion" rows="4" placeholder="Descripción de tu tienda">{{ data.tienda_info.descripcion }}</textarea>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="horario">Horario de Atención</label>
+                                <textarea id="horario" name="horario" rows="3" placeholder="Ej: Lunes a Viernes: 9:00 - 18:00">{{ data.tienda_info.horario }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- TAB CONTACTO -->
+                <div id="contacto-tab" class="tab-content">
+                    <div class="config-section">
+                        <h2 class="section-title">
+                            <ion-icon name="location-outline"></ion-icon>
+                            Información de Contacto
+                        </h2>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="telefono">Teléfono</label>
+                                <input type="tel" id="telefono" name="telefono" value="{{ data.tienda_info.telefono }}" placeholder="+52 1234567890">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" value="{{ data.tienda_info.email }}" placeholder="correo@tutienda.com">
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="direccion">Dirección Completa</label>
+                                <textarea id="direccion" name="direccion" rows="3" placeholder="Calle, Número, Colonia, Ciudad, Estado">{{ data.tienda_info.direccion }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- TAB REDES SOCIALES -->
+                <div id="redes-tab" class="tab-content">
+                    <div class="config-section">
+                        <h2 class="section-title">
+                            <ion-icon name="globe-outline"></ion-icon>
+                            Redes Sociales
+                        </h2>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="facebook">
+                                    <ion-icon name="logo-facebook"></ion-icon>
+                                    Facebook
+                                </label>
+                                <input type="url" id="facebook" name="facebook" value="{{ data.tienda_info.facebook }}" placeholder="https://facebook.com/tupagina">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="instagram">
+                                    <ion-icon name="logo-instagram"></ion-icon>
+                                    Instagram
+                                </label>
+                                <input type="url" id="instagram" name="instagram" value="{{ data.tienda_info.instagram }}" placeholder="https://instagram.com/tuperfil">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="whatsapp">
+                                    <ion-icon name="logo-whatsapp"></ion-icon>
+                                    WhatsApp
+                                </label>
+                                <input type="tel" id="whatsapp" name="whatsapp" value="{{ data.tienda_info.whatsapp }}" placeholder="+52 1234567890">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- TAB IMÁGENES -->
+                <div id="imagenes-tab" class="tab-content">
+                    <div class="config-section">
+                        <h2 class="section-title">
+                            <ion-icon name="camera-outline"></ion-icon>
+                            Imágenes de la Tienda
+                        </h2>
+                        
+                        <div class="images-grid">
+                            <!-- Logo -->
+                            <div class="image-upload-section">
+                                <h3>Logo de la Tienda</h3>
+                                <div class="current-image">
+                                    {% if data.tienda_info.logo_url %}
+                                    <img src="{{ data.tienda_info.logo_url }}" alt="Logo actual" id="logo-preview">
+                                    {% else %}
+                                    <div class="no-image">
+                                        <ion-icon name="image-outline"></ion-icon>
+                                        <p>Sin logo</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="image-upload-area" onclick="document.getElementById('logo-file').click()">
+                                    <input type="file" id="logo-file" name="logo" accept="image/*" onchange="previewImage(this, 'logo-preview')">
+                                    <div class="upload-placeholder">
+                                        <ion-icon name="cloud-upload-outline"></ion-icon>
+                                        <p>Haz clic para cargar nuevo logo</p>
+                                        <span class="upload-hint">Recomendado: 500x500px</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Banner Principal -->
+                            <div class="image-upload-section">
+                                <h3>Banner Principal</h3>
+                                <div class="current-image banner">
+                                    {% if data.tienda_info.banner_principal_url %}
+                                    <img src="{{ data.tienda_info.banner_principal_url }}" alt="Banner actual" id="banner-preview">
+                                    {% else %}
+                                    <div class="no-image">
+                                        <ion-icon name="image-outline"></ion-icon>
+                                        <p>Sin banner</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="image-upload-area" onclick="document.getElementById('banner-file').click()">
+                                    <input type="file" id="banner-file" name="banner" accept="image/*" onchange="previewImage(this, 'banner-preview')">
+                                    <div class="upload-placeholder">
+                                        <ion-icon name="cloud-upload-outline"></ion-icon>
+                                        <p>Haz clic para cargar nuevo banner</p>
+                                        <span class="upload-hint">Recomendado: 1920x600px</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- BOTONES DE ACCIÓN -->
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="resetForm()">
+                        <ion-icon name="refresh-outline"></ion-icon>
+                        Restablecer
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <ion-icon name="save-outline"></ion-icon>
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </main>
+    </div>
+    
+    <!-- NOTIFICACIONES -->
+    <div class="notification-container"></div>
+</body>
+</html>
